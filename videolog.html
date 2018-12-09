@@ -1,0 +1,87 @@
+<html>
+
+<head>
+
+    <title>Video Log</title>
+    <link rel="stylesheet" href="include/videoplayer.css" type="text/css" media="screen" charset="utf-8">
+    <script type='module' src='include/videoplayer.js'></script>
+
+</head>
+
+<body>
+
+        <div class='modal' id='videoUpload'>
+                <div class='content'>
+                    <div id='dropbox'>
+                        <object data='images/uploadicon.svg' id='uploadicon' type="image/svg+xml"></object>
+                        <!-- <img src='uploadicon.svg' id='uploadicon'> -->
+                        <h3 id='clickToUpload'>Click to Upload Video</h3>
+                        <p>Or drag and drop a video file.</p>
+                        <input type="file" id="fileUpload" class='hide'>
+                    </div>
+                </div>
+            </div>
+            <div class='modal' id='assignDate' class='hide'>
+                <div class='content'>
+                        <h3>Confirm Date</h3>
+                        <p>The date below was extracted from the video you uploaded. Please confirm that is correct.</p>
+                        <form id='logDate'>
+                            <input type='number' maxLength='2' size='2' id='month' name='month' placeholder='MM'>/
+                            <input type='number' maxLength='2' size='2' id='day' name='day' placeholder='DD'>/
+                            <input type='number' maxLength='4' size='4' id='year' name='year' placeholder='YYYY'>
+                            <input type='submit' value='Create Log'>
+                        </form>
+                </div>
+            </div>
+
+
+<div id='videoPlayer' class='hide'>
+
+    <div>
+        <span id='date'></span>
+        <span id='countOut'></span>
+    </div>
+
+    <div class='videoLoading'>Loading Video...</div>
+    <video class='video hide'></video>
+
+    <div id='playbackControl' class='playbackControl'>
+
+        <div id='skipBack'>-5</div>
+        <div id='skipAhead'>+5</div>
+
+        <div id='play' class='paused'></div>
+
+        <div class="time">00:00:00</div>
+
+        <div class='sliderBack'>
+            <div class='durationBar'></div>
+            <div class='sliderKnob'></div>
+        </div>
+
+        <select name="playbackSpeed" id="playbackSpeed">
+            <option value = '10' data-skipdistance='30'>10x</option>
+            <option value = '2' data-skipdistance='10'>2x</option>
+            <option value = '1' data-skipdistance='5' selected>1x</option>
+            <option value = '.5' data-skipdistance='2'>.5x</option>
+            <option value = '.25' data-skipdistance='1'>.25x</option>
+            <option value = '.1' data-skipdistance='.5'>.1x</option>
+        </select>
+
+    </div>
+
+
+    <div id='graph'>
+        <div id='timeline'>
+            <div id='currentPos'>
+                <div id='time'></div>
+            </div>
+        </div>
+        <canvas width='2000' height='150px'></canvas>
+    </div>
+
+
+</div>
+
+
+</body>

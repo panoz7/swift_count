@@ -1,0 +1,6 @@
+RewriteEngine on
+RewriteRule ^logs/([A-Za-z0-9-]+)$ v1.php?log_id=$1 [NC]
+RewriteRule ^logs$ v1.php
+
+
+# RewriteRule ^products/([A-Za-z0-9-]+)/?$ results.php?products=$1 [NC]

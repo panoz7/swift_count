@@ -1,0 +1,75 @@
+<html>
+
+<head>
+
+<script type='module'>
+
+    import {makeHttpRequest} from './modules/helper.js';
+
+    window.onload = setup;
+
+    function setup() {
+
+        let tbody = document.getElementById('logs');
+
+        makeHttpRequest('api/logs','GET')
+            .then((res) => {
+                res = JSON.parse(res);
+                
+                res.forEach(log => {
+                    let date = new Date(log.date);
+
+                    let dateLink = document.createElement('a');
+                    dateLink.href = `log.html?id=${log.id}`;
+                    dateLink.innerHTML = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+                    
+                    let totalCount = log.totalCount ? log.totalCount : 0;
+
+                    tbody.appendChild(buildRow([log.id, dateLink, totalCount]))
+                })
+            })
+
+
+    }
+
+    function buildRow(cols, cellType = 'td') {
+
+        let tr = document.createElement('tr');
+
+        cols.forEach(value => {
+            let cell = document.createElement(cellType);
+
+            if (typeof value == 'object') cell.appendChild(value);
+            else cell.innerHTML = value;
+
+            tr.appendChild(cell);
+        })
+
+        return tr;
+    }
+
+</script>
+
+
+</head>
+
+<body>
+
+<h2>Swift Count</h2>
+<ul>
+    <li>
+        <a href='videolog.html'>Create new log from video</a>
+    </li>
+</ul>
+
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Date</th>
+<th>Count</th>
+</tr>
+</head>
+<tbody id='logs'>
+</tbody>
+</table>

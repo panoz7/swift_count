@@ -1,0 +1,165 @@
+
+        body {
+            background-color: #111;
+            color: white;
+            font-family: arial;
+            margin: 0px;
+            padding: 0px;
+        }
+    
+        .hide {
+            display: none !important;
+        }
+    
+        .modal {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ccc;
+        }
+    
+        .modal .content {
+            box-sizing: border-box;
+            color: #222;
+            width: 500px;
+            background-color: white;
+            text-align: center;
+        }
+    
+        .modal h2 {
+            background-color: #0b407c;
+            padding: 10px;
+            margin: 0px;
+            font-size: 18px;
+        }
+    
+        #dropbox {
+            padding: 30px;
+            width: 100%;
+            background-color: white;
+            color: black;
+        }
+    
+        #dropbox Object {
+            width: 150px;
+            fill: blue;
+        }
+    
+        /* #uploadicon svg path {
+            fill: blue;
+        } */
+    
+        #dropbox.active {
+            background-color: #90c600;
+            color: black;
+        }
+    
+        #assignDate input[type=number] {
+            font-size: 20px;
+            padding: 5px;
+            text-align: center;
+            margin-right: 5px;
+            width: 6em;
+        }
+            
+            .videoLoading {
+                background-color: #222;
+                width: 100%;
+                height: 562.5px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+    
+            .hide {
+                display: none;
+            }
+
+
+
+    video {
+        width: 1000px;
+    }
+
+    #videoPlayer {
+        margin: 0px auto;
+        width: 1000px;
+    }
+
+    #graph {
+        border-top: 1px solid black;
+    }
+
+    #graph canvas {
+        width: 1000px;
+    }
+
+    .playbackControl {
+        background-color: #333;
+        color: white;
+        font-family: arial; 
+        font-size: 13px;
+        display: flex;
+        width: 1000px;
+    }
+
+    #play {
+        background-image: url('../images/pausebut.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 15px;
+        height: 15px;
+    }
+
+    #play.paused {
+        background-image: url('../images/playbut.svg');
+    }
+
+    .playbackControl>div {
+        margin: 5px 5px;
+        /* background-color:red; */
+    }
+
+    .playbackControl .time {
+        color: white;
+        min-width: 80px;
+    }
+
+    .playbackControl #skipAhead, .playbackControl #skipBack {
+        min-width: 30px;
+    }
+
+    .playbackControl .sliderBack {
+        background-color: #777;
+        width: 800px;
+        height: 4px;
+        position: relative; 
+        margin-top: 9px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .sliderBack .sliderKnob {
+        background-color: #f43900;
+        width: 15px;
+        height: 15px;
+        border-radius: 20px;
+        position: absolute;
+        left: 0px;
+        
+        margin-top: -5px;
+        margin-left: -10px;
+        border: 1px solid #ae2900;
+        box-sizing: border-box;
+    }
+
+    .sliderBack .durationbar {
+        width: 0px;
+        height: 4px;
+        background-color: #eee; 
+        position: absolute;
+        left: 0;
+        border-radius: 8px;
+
+    }
