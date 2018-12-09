@@ -59,6 +59,15 @@ async function loadLog(id) {
     // Update the edit log link
     document.getElementById('editLog').href = `videolog.html?id=${id}`
     
+    let rawDataTable = document.getElementById('rawLog');
+
+    console.log(log.data);
+
+    log.data.forEach(entry => {
+        rawDataTable.appendChild(buildRow([formatPlaybackTime(new Date(log.startTime.getTime() + entry.time)), entry.count]))
+    })
+
+
     // Get the count by minute
     // let minuteCount = log.getCountByInterval(10);
     let minuteCount = log.getTotalByInterval(60);
@@ -140,6 +149,18 @@ function drawChart(tempData) {
     </tbody>
 </table>
 
+<h2>Raw Data</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Time Stamp</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody id='rawLog'>
+
+    </tbody>
+</table>
 
 
 
