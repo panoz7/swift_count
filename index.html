@@ -21,7 +21,7 @@
 
                     let dateLink = document.createElement('a');
                     dateLink.href = `log.html?id=${log.id}`;
-                    dateLink.innerHTML = `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+                    dateLink.innerHTML = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
                     
                     let totalCount = log.totalCount ? log.totalCount : 0;
 

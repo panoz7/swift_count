@@ -4,6 +4,8 @@ import {Log} from '../modules/log.js';
 
 var video, startTime, log, slider, graph, countOut, dragCount = 0, videoFile, id, fromDB = false; 
 
+window.log = log;
+
 window.onload = setup;
 
 function setup() {
