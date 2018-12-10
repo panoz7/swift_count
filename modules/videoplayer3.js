@@ -9,6 +9,7 @@ export class VideoPlayer {
         this.videoLoaded = false;
         this.displayRequested = false;
         this.initialized = false; 
+        this.lastUpdate = new Date();
     }
 
     loadVideo(src) {
@@ -79,9 +80,15 @@ export class VideoPlayer {
     }
 
     animate() {
+        // let currentTime = new Date()
+        // console.log(currentTime.getTime() - this.lastUpdate.getTime());
+        // this.lastUpdate = currentTime;
+
         if (!this.video.paused) {
+            console.time("animate")
             this.slider.setTime(this.video.currentTime);
             this.graph.renderGraph(new Date(this.startTime.getTime() + Math.round(this.video.currentTime * 1000)))
+            console.timeEnd("animate")
         }
         window.requestAnimationFrame(this.animate.bind(this));
     }

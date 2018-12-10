@@ -48,7 +48,7 @@ table td, table th {
 
 async function loadLog(id) {
     // Load the log
-    log = await Log.fromId2(id);
+    let log = await Log.fromId2(id);
 
     const date = `${log.startTime.getMonth()}/${log.startTime.getDate()}/${log.startTime.getFullYear()}`;
     
