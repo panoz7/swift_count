@@ -1,0 +1,9 @@
+<?php
+$user="";
+$host="localhost:8889";
+$password="";
+$database="swiftcount";
+
+$mysqli = new mysqli($host, $user, $password, $database);
+
+?>

@@ -59,10 +59,8 @@ async function loadLog(id) {
     // Update the edit log link
     document.getElementById('editLog').href = `videolog.html?id=${id}`
     
+    // Output the raw data
     let rawDataTable = document.getElementById('rawLog');
-
-    console.log(log.data);
-
     log.data.forEach(entry => {
         rawDataTable.appendChild(buildRow([formatPlaybackTime(new Date(log.startTime.getTime() + entry.time)), entry.count]))
     })
