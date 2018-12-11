@@ -23,7 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'log_id' => $logRow['log_id'], 
             'start_time' => $isodata, 
             'file_name' => $logRow['file_name'],
-            'entries' => array()
+            'entries' => array(), 
+            'weather' => $logRow['weather'],
+            'notes' => $logRow['notes']
         );
 
         $query = "SELECT * FROM entries WHERE log_id = ".$_GET['log_id']." ORDER BY time";
@@ -43,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 // /logs
 // List of all logs
     else {
-        $query = "SELECT logs.log_id, date, sum(entries.count) as count FROM logs
+        $query = "SELECT logs.log_id, date, sum(entries.count) as count, weather, notes FROM logs
         left join entries on entries.log_id = logs.log_id
         group by logs.log_id
         ORDER BY logs.date DESC";
@@ -56,7 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $datetime = new DateTime($row['date']);
             $isodata = $datetime->format(DateTime::ATOM);
             
-            $data[] = array('id'=>$row['log_id'], 'date'=> $isodata, 'totalCount' => $row['count']);
+            $data[] = array(
+                'id'=>$row['log_id'], 
+                'date'=> $isodata, 
+                'totalCount' => $row['count'],
+                'weather' => $row['weather'],
+                'notes' => $row['notes']
+            );
             
         }
 
@@ -104,9 +112,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     else {
 
         $date = date ("Y-m-d H:i:s", strtotime($data['date']));
-        $filename = $data['fileName'];
 
-        $query = "INSERT INTO logs (date, file_name) VALUES ('$date','$filename')";
+        $filename = $mysqli->real_escape_string($data['fileName']);
+        $weather = $mysqli->real_escape_string($data['weather']);
+        $notes = $mysqli->real_escape_string($data['notes']);
+
+
+        $query = "INSERT INTO logs (date, file_name, weather, notes) VALUES ('$date','$filename','$weather','$notes')";
         $result = $mysqli->query($query) OR DIE($mysqli->error);
 
         $log_id = $mysqli->insert_id;

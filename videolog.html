@@ -23,12 +23,18 @@
             </div>
             <div class='modal hide' id='assignDate'>
                 <div class='content'>
+                        <form id='logDate'>
                         <h3>Confirm Date</h3>
                         <p>The date below was extracted from the video you uploaded. Please confirm that is correct.</p>
-                        <form id='logDate'>
                             <input type='number' maxLength='2' size='2' id='month' name='month' placeholder='MM'>/
                             <input type='number' maxLength='2' size='2' id='day' name='day' placeholder='DD'>/
                             <input type='number' maxLength='4' size='4' id='year' name='year' placeholder='YYYY'>
+                        <h3>Weather</h3>
+                            <textarea id='weather'></textarea>
+                        <h3>Notes</h3>
+                            <textarea id='notes'></textarea>
+                        <br/>
+                            
                             <input type='submit' value='Create Log'>
                         </form>
                 </div>

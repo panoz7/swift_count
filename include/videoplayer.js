@@ -43,7 +43,6 @@ function dragEnter(e) {
     dragCount++; 
 
     e.target.classList.add('active');
-    console.log("enter");
 }
 
 function dragOver(e) {
@@ -58,7 +57,6 @@ function dragLeave(e) {
     dragCount--; 
 
     if (dragCount === 0) {
-        console.log("leave");
         e.target.classList.remove('active');
     }
 }
@@ -153,7 +151,7 @@ function handleVideoUpload() {
                 startTime.setDate(d);
 
                 // Display the video player
-                displayVideoPlayer()
+                displayVideoPlayer(e.target.notes.value, e.target.weather.value)
             }
 
         })
@@ -161,13 +159,13 @@ function handleVideoUpload() {
 }
 
 
-function displayVideoPlayer() {
+function displayVideoPlayer(notes,weather) {
 
     // Hide the date form
     document.getElementById('assignDate').classList.add('hide');
     
     // Create the log
-    if (!fromDB) log = new Log(startTime,videoFile.name);
+    if (!fromDB) log = new Log(startTime,videoFile.name,undefined,notes,weather);
 
     // Show the video
     videoPlayer.displayPlayer(log)

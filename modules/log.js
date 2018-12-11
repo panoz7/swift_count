@@ -3,12 +3,14 @@ import {makeHttpRequest} from './helper.js';
 
 export class Log {
     
-    constructor(startTime = new Date(), fileName, id) {
+    constructor(startTime = new Date(), fileName, id, weather, notes) {
         this.startTime = startTime
         this.data = [];
         this.currentCount = 0; 
         this.fileName = fileName; 
         this.id = id;
+        this.weather = weather;
+        this.notes = notes;
     }
 
     addData(count, time = new Date()) {
@@ -69,8 +71,12 @@ export class Log {
 
             let body = {
                 'date': this.startTime, 
-                'fileName': this.fileName
+                'fileName': this.fileName, 
+                'weather': this.weather,
+                'notes': this.notes
             }
+
+            console.log(body);
 
             makeHttpRequest('api/logs','POST',JSON.stringify(body),'application/json')
             .then(res => {
@@ -238,7 +244,7 @@ export class Log {
 
             console.log(res);
 
-            let log = new Log(new Date(res.start_time), res.file_name, res.log_id);
+            let log = new Log(new Date(res.start_time), res.file_name, res.log_id, res.weather, res.notes);
             log.data = res.entries.map(entry => {
                 return {count: Number(entry.count), time: Number(entry.time), uploaded: true}
             });

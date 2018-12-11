@@ -41,7 +41,6 @@ table td, table th {
             loadLog(id);
         }
     
-
     }
 
 
@@ -55,6 +54,10 @@ async function loadLog(id) {
     // Update the page Titles
     document.title = `Swift Log ${date}`;
     document.getElementById('date').innerHTML = date;
+
+    // Add notes and weather text
+    document.getElementById('notes').innerHTML = log.notes;
+    document.getElementById('weather').innerHTML = log.weather;
 
     // Update the edit log link
     document.getElementById('editLog').href = `videolog.html?id=${id}`
@@ -125,15 +128,21 @@ function drawChart(tempData) {
 
 <h2><span id='date'></span> Log</h2>
 
+<h3>Notes</h3>
+<p id='notes'></p>
+
+<h3>Weather</h3>
+<p id='weather'></p>
+
 <ul>
     <li>
         <a id='editLog'>Edit Log</a>
     </li>
 </ul>
 
-<div id="dataChart" style="width: 100%; height: 400px"></div>
+<h3>Minute By Minute Data</h2>
+    <div id="dataChart" style="width: 100%; height: 400px"></div>
 
-<h2>Minute By Minute Data</h2>
 <table>
     <thead>
         <tr>
@@ -147,7 +156,7 @@ function drawChart(tempData) {
     </tbody>
 </table>
 
-<h2>Raw Data</h2>
+<h3>Raw Data</h2>
 <table>
     <thead>
         <tr>

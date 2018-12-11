@@ -15,6 +15,8 @@
         makeHttpRequest('api/logs','GET')
             .then((res) => {
                 res = JSON.parse(res);
+
+                console.log(res);
                 
                 res.forEach(log => {
                     let date = new Date(log.date);
@@ -25,7 +27,7 @@
                     
                     let totalCount = log.totalCount ? log.totalCount : 0;
 
-                    tbody.appendChild(buildRow([log.id, dateLink, totalCount]))
+                    tbody.appendChild(buildRow([log.id, dateLink, totalCount, log.weather, log.notes]))
                 })
             })
 
@@ -68,6 +70,8 @@
 <th>ID</th>
 <th>Date</th>
 <th>Count</th>
+<th>Weater</th>
+<th>Notes</th>
 </tr>
 </head>
 <tbody id='logs'>
