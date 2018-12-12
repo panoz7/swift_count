@@ -117,29 +117,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $weather = $mysqli->real_escape_string($data['weather']);
         $notes = $mysqli->real_escape_string($data['notes']);
 
-
         $query = "INSERT INTO logs (date, file_name, weather, notes) VALUES ('$date','$filename','$weather','$notes')";
-        $result = $mysqli->query($query) OR DIE($mysqli->error);
+        $logResult = $mysqli->query($query) OR DIE($mysqli->error);
 
         $log_id = $mysqli->insert_id;
+        
+        // If there's data insert it into the entries table
+        if ($data['data']) {
+            $query = "INSERT INTO entries (log_id, time, count) VALUES ";
+
+            $inserts = Array();
+            foreach ($data['data'] as $entry) {
+                $inserts[] = "('".$log_id."','".$entry['time']."','".$entry['count']."')";
+            }
+    
+            $query .= implode(",",$inserts);        
+            $entryResult = $mysqli->query($query) OR DIE($mysqli->error);
+        }
         
         $data = array('logId' => $log_id);
         header('Content-type: application/json');
         echo json_encode($data);
-
-        // $query = "INSERT INTO entries (log_id, time, count) VALUES ";
-
-        // $inserts = Array();
-        // foreach ($data['data'] as $entry) {
-        //     $inserts[] = "('".$log_id."','".$entry['time']."','".$entry['count']."')";
-        // }
-
-        // $query .= implode(",",$inserts);
-
-        // echo $query."\n";
-        
-        // $result = $mysqli->query($query) OR DIE($mysqli->error);
-        // echo $result;
     }
 
 }

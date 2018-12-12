@@ -69,26 +69,33 @@ export class Log {
 
         return new Promise((resolve, reject) => {
 
+            // Grab the data that hasn't been uploaded yet and set its upload status to pending
+            let data = this.data;
+            data.forEach(entry => {entry.uploaded = "pending"})
+
+            // Build the object that will be sent to the API
             let body = {
                 'date': this.startTime, 
                 'fileName': this.fileName, 
                 'weather': this.weather,
-                'notes': this.notes
+                'notes': this.notes,
+                'data': data
             }
-
-            console.log(body);
 
             makeHttpRequest('api/logs','POST',JSON.stringify(body),'application/json')
             .then(res => {
                 res = JSON.parse(res);
                 this.id = res.logId;
                 this.addingToDb = false;
+
+                data.forEach(entry => {entry.uploaded = true});
+
                 console.log("log id: "+this.id);
-                resolve(this.id);
+                resolve(res);
             })
             .catch(error => {
                 this.addingToDb = false;
-                console.log("error", error)
+                console.log("error in addlogtodb", error)
                 reject(error);
             });
 
@@ -97,7 +104,6 @@ export class Log {
     }
 
     syncWithDb() {
-
         // If there isn't an ID and we're not already trying to get the ID add the log to the database
         if (!this.id && !this.addingToDb) {
             this.addLogToDb()
@@ -105,11 +111,11 @@ export class Log {
                     this.syncWithDb();
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log("error in syncwith db", error);
                 }) 
         }
         // Otherwise add the new entries
-        else {
+        else if (this.id && !this.addingToDb) {
             // Get the entries that haven't been uploaded yet
             let data = this.data.filter(entry => !entry.uploaded)
 
@@ -263,5 +269,27 @@ Array.prototype.findLastIndex = function(test) {
     }
 
     return 0;
+
+}
+
+
+export class OfflineLog extends Log {
+
+    addData(count, time = new Date()) {
+        count = parseInt(count);
+        this.currentCount += count;
+
+        const delta = time.getTime() - this.startTime.getTime();
+
+        this.data.push({time: delta, count});
+
+    }
+
+    generateLocalStorageObject() {
+        let obj = {};
+        obj.startTime = this.startTime;
+        obj.data = this.data;
+        return obj;
+    }
 
 }

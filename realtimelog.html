@@ -1,0 +1,66 @@
+<html>
+
+<head>
+    <title>Realtime log</title>
+
+<script type='module'>
+
+    import {OfflineLog} from './modules/log.js';
+
+    let startTime = new Date();
+
+    let log = new OfflineLog(startTime);
+    window.log = log;
+
+    for (var i = 0; i < 20; i++) {
+        log.addData(1, new Date(startTime.getTime() + i * 1000));
+    }
+
+    // log.addLogToDb()
+    //     .then((res) => {
+    //         console.log(res);
+    //     })
+
+    // Get any saved swift logs from local storage
+    let swiftLogsData = localStorage.getItem('swiftLogs')
+    let swiftLogs = swiftLogsData ? JSON.parse(swiftLogsData) : [];
+
+    // Add the current log to the swiftLogs array
+    // let localStorageLog = log.generateLocalStorageObject();
+    // swiftLogs.push(localStorageLog);
+
+    // Save the upldated swiftLogs data back to local storage
+    localStorage.setItem('swiftLogs', JSON.stringify(swiftLogs));
+
+    syncLogsToDb(swiftLogs);
+
+
+    function syncLogsToDb(logs) {
+
+        logs = logs.map(logData => {
+            let log = new OfflineLog(logData.startTime);
+            log.data = logData.data;
+            return log;
+        })
+
+        let syncLogs = logs.map(log => {
+            return log.addLogToDb()
+                .then(res => {
+                    log.id = res;
+                });
+        })
+
+        Promise.all(syncLogs)
+            .then(() => {
+                console.log(logs);
+            })
+
+    }
+
+
+
+</script>
+
+
+</head>
+</html>
