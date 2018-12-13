@@ -4,7 +4,6 @@ include ("../include/login.php");
 
 
 
-
 // GET 
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -111,33 +110,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     else {
 
-        $date = date ("Y-m-d H:i:s", strtotime($data['date']));
-
-        $filename = $mysqli->real_escape_string($data['fileName']);
-        $weather = $mysqli->real_escape_string($data['weather']);
-        $notes = $mysqli->real_escape_string($data['notes']);
-
-        $query = "INSERT INTO logs (date, file_name, weather, notes) VALUES ('$date','$filename','$weather','$notes')";
-        $logResult = $mysqli->query($query) OR DIE($mysqli->error);
-
-        $log_id = $mysqli->insert_id;
-        
-        // If there's data insert it into the entries table
-        if ($data['data']) {
-            $query = "INSERT INTO entries (log_id, time, count) VALUES ";
-
-            $inserts = Array();
-            foreach ($data['data'] as $entry) {
-                $inserts[] = "('".$log_id."','".$entry['time']."','".$entry['count']."')";
-            }
-    
-            $query .= implode(",",$inserts);        
-            $entryResult = $mysqli->query($query) OR DIE($mysqli->error);
+        // Multiple Logs
+        if (gettype($data[0]) == "array") {
+            // Map each log in the array through the insertLog function
+            $results = array_map("insertLog", $data);
+            $returnData = array('logIds' => $results);
         }
-        
-        $data = array('logId' => $log_id);
+        // Single Log
+        else {
+            $log_id = insertLog($data,$mysqli);
+            $returnData = array('logId' => $log_id);
+        }
+
         header('Content-type: application/json');
-        echo json_encode($data);
+        echo json_encode($returnData);
+
     }
 
 }
@@ -193,6 +180,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
         // echo json_encode($data);
 
     }
+}
+
+
+function insertLog($data) {
+
+    global $mysqli;
+
+        $date = date ("Y-m-d H:i:s", strtotime($data['date']));
+
+        $filename = $mysqli->real_escape_string($data['fileName']);
+        $weather = $mysqli->real_escape_string($data['weather']);
+        $notes = $mysqli->real_escape_string($data['notes']);
+
+        $query = "INSERT INTO logs (date, file_name, weather, notes) VALUES ('$date','$filename','$weather','$notes')";
+        $logResult = $mysqli->query($query) OR DIE($mysqli->error);
+
+        $log_id = $mysqli->insert_id;
+        
+        // If there's data insert it into the entries table
+        if ($data['data']) {
+            $query = "INSERT INTO entries (log_id, time, count) VALUES ";
+
+            $inserts = Array();
+            foreach ($data['data'] as $entry) {
+                $inserts[] = "('".$log_id."','".$entry['time']."','".$entry['count']."')";
+            }
+    
+            $query .= implode(",",$inserts);        
+            $entryResult = $mysqli->query($query) OR DIE($mysqli->error);
+        }
+
+        return $log_id;
 }
 
 

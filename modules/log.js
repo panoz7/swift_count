@@ -292,4 +292,40 @@ export class OfflineLog extends Log {
         return obj;
     }
 
+    generateDBInsertObject() {
+        // Build the object that will be sent to the API
+        let body = {
+            'date': this.startTime, 
+            'fileName': this.fileName, 
+            'weather': this.weather,
+            'notes': this.notes,
+            'data': this.data
+        }
+        return body;
+    }
+
+    // addLogToDb() {
+
+
+    //     // Grab the data that hasn't been uploaded yet and set its upload status to pending
+    //     let data = this.data;
+    //     data.forEach(entry => {entry.uploaded = "pending"})
+
+    //     // Build the object that will be sent to the API
+    //     let body = {
+    //         'date': this.startTime, 
+    //         'fileName': this.fileName, 
+    //         'weather': this.weather,
+    //         'notes': this.notes,
+    //         'data': data
+    //     }
+
+    //     makeHttpRequest('api/logs','POST',JSON.stringify(body),'application/json')
+    //     .then(res => {
+    //         console.log(res);
+    //     })
+
+
+    // }
+
 }

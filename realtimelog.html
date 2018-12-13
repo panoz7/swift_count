@@ -6,6 +6,7 @@
 <script type='module'>
 
     import {OfflineLog} from './modules/log.js';
+    import {makeHttpRequest} from './modules/helper.js';
 
     let startTime = new Date();
 
@@ -26,14 +27,17 @@
     let swiftLogs = swiftLogsData ? JSON.parse(swiftLogsData) : [];
 
     // Add the current log to the swiftLogs array
-    // let localStorageLog = log.generateLocalStorageObject();
-    // swiftLogs.push(localStorageLog);
+    let localStorageLog = log.generateLocalStorageObject();
+    swiftLogs.push(localStorageLog);
 
-    // Save the upldated swiftLogs data back to local storage
+    // Save the updated swiftLogs data back to local storage
     localStorage.setItem('swiftLogs', JSON.stringify(swiftLogs));
 
     syncLogsToDb(swiftLogs);
 
+    console.log(swiftLogs);
+
+    // log.addLogToDb();
 
     function syncLogsToDb(logs) {
 
@@ -41,18 +45,18 @@
             let log = new OfflineLog(logData.startTime);
             log.data = logData.data;
             return log;
-        })
+        }).map(log => log.generateDBInsertObject())
 
-        let syncLogs = logs.map(log => {
-            return log.addLogToDb()
-                .then(res => {
-                    log.id = res;
-                });
-        })
+        makeHttpRequest('api/logs','POST',JSON.stringify(logs),'application/json')
+            .then(res => {
+                res = JSON.parse(res);
+                if (res.logIds) {
+                    console.log("Success!");
 
-        Promise.all(syncLogs)
-            .then(() => {
-                console.log(logs);
+                    // Erase the log storage cache
+                    swiftLogs = [];
+                    localStorage.setItem('swiftLogs', []);
+                }
             })
 
     }
