@@ -4,7 +4,10 @@ import {makeHttpRequest} from './helper.js';
 export class Log {
     
     constructor(startTime = new Date(), fileName, id, weather, notes) {
-        this.startTime = startTime
+
+        // If starttime is a string try and create a date from it and then assign it. 
+        // Otherwise it's a date and it can be assigned directly. 
+        this.startTime = typeof startTime == "string" ? new Date(startTime) : startTime
         this.data = [];
         this.currentCount = 0; 
         this.fileName = fileName; 
@@ -278,11 +281,8 @@ export class OfflineLog extends Log {
     addData(count, time = new Date()) {
         count = parseInt(count);
         this.currentCount += count;
-
         const delta = time.getTime() - this.startTime.getTime();
-
         this.data.push({time: delta, count});
-
     }
 
     generateLocalStorageObject() {
