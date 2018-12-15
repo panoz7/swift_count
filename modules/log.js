@@ -14,6 +14,7 @@ export class Log {
         this.id = id;
         this.weather = weather;
         this.notes = notes;
+        this.redoCache = [];
     }
 
     addData(count, time = new Date()) {
@@ -23,6 +24,7 @@ export class Log {
         const delta = time.getTime() - this.startTime.getTime();
 
         this.data.push({time: delta, count});
+        this.redoCache = [];
 
         this.syncWithDb();
     }
@@ -217,6 +219,24 @@ export class Log {
     
     }
 
+    undo() {
+        let entry = this.data.pop();
+
+        if (entry) {
+            this.currentCount -= entry.count;
+            this.redoCache.push(entry);
+        }
+
+    }
+
+    redo() {
+        let entry = this.redoCache.pop();
+        
+        if (entry) {
+            this.currentCount += entry.count;
+            this.data.push(entry);
+        }
+    }
 
 
 
@@ -260,7 +280,10 @@ export class Log {
 
             return log;
     
-    }      
+    }
+    
+    
+
 
 }
 
@@ -291,6 +314,7 @@ export class OfflineLog extends Log {
         this.currentCount += count;
         const delta = time.getTime() - this.startTime.getTime();
         this.data.push({time: delta, count});
+        this.redoCache = [];
         this.saveInProgress();
     }
 
