@@ -334,7 +334,7 @@ export class OfflineLog extends Log {
     }
 
     static fromData(data) {
-        let log = new Log(data.startTime, undefined, undefined, data.weather, data.notes);
+        let log = new OfflineLog(data.startTime, undefined, undefined, data.weather, data.notes);
         log.data = data.data;
         return log; 
     }
