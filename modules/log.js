@@ -301,14 +301,6 @@ Array.prototype.findLastIndex = function(test) {
 
 export class OfflineLog extends Log {
 
-    constructor(startDate = new Date(), logData = []) {
-
-        super(startDate);
-        this.data = logData;
-        this.currentCount = logData ? logData.reduce((total, entry) => {return total += entry.count}, 0) : 0;
-
-    }
-
     addData(count, time = new Date()) {
         count = parseInt(count);
         this.currentCount += count;
@@ -339,6 +331,12 @@ export class OfflineLog extends Log {
 
     saveInProgress() {
         localStorage.setItem('currentLog', JSON.stringify(this.generateLocalStorageObject()));
+    }
+
+    static fromData(data) {
+        let log = new Log(data.startTime, undefined, undefined, data.weather, data.notes);
+        log.data = data.data;
+        return log; 
     }
 
 }

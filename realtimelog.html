@@ -42,7 +42,7 @@
 
         // Create a new log from the localstorage data and save it to the global log variable;
         let logData = JSON.parse(localStorage.getItem('currentLog'))
-        log = new OfflineLog(logData.startTime, logData.data);
+        log = OfflineLog.fromData(logData);
 
         document.getElementById('inProgressLogDate').innerHTML = formatDateForDisplay(log.startTime);
         document.getElementById('inProgressLogCount').innerHTML = log.currentCount + (log.currentCount == 1 ? " bird" : " birds");

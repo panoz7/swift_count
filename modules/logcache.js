@@ -12,7 +12,7 @@ export class LogCache {
 
         if (swiftLogsData) {
             swiftLogsData = JSON.parse(swiftLogsData);
-            return swiftLogsData.map(logData => new OfflineLog(logData.startTime, logData.data))
+            return swiftLogsData.map(logData => OfflineLog.fromData(logData))
         }
 
         return [];
