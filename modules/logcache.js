@@ -24,6 +24,7 @@ export class LogCache {
 
     addLog(log) {
         this.logs.push(log);
+        this.saveLogs();
     }
 
     saveLogs() {
