@@ -273,10 +273,7 @@ export class Log {
 
             res = JSON.parse(res);
 
-            // Remove once I add log
-            res.log = 'video';
-
-            let log = new Log(res.log_type, res.logType, new Date(res.start_time), res.file_name, res.log_id, res.weather, res.notes);
+            let log = new Log(res.log_type, new Date(res.start_time), res.file_name, res.log_id, res.weather, res.notes);
             log.data = res.entries.map(entry => {
                 return {count: Number(entry.count), time: Number(entry.time), uploaded: true}
             });
