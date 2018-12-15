@@ -278,10 +278,9 @@ Array.prototype.findLastIndex = function(test) {
 
 export class OfflineLog extends Log {
 
-    constructor(startDate = new Date(), logData) {
+    constructor(startDate = new Date(), logData = []) {
 
         super(startDate);
-
         this.data = logData;
         this.currentCount = logData ? logData.reduce((total, entry) => {return total += entry.count}, 0) : 0;
 
