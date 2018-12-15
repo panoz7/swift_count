@@ -27,7 +27,13 @@
                     
                     let totalCount = log.totalCount ? log.totalCount : 0;
 
-                    tbody.appendChild(buildRow([log.id, dateLink, totalCount, log.weather, log.notes]))
+                    let logDisplayNames = {
+                        realTime: "Real Time",
+                        video: "Video"
+                    } 
+                    let logName = logDisplayNames[log.log_type] ? logDisplayNames[log.log_type] : "Other";
+
+                    tbody.appendChild(buildRow([log.id, dateLink, logName, totalCount, log.weather, log.notes]))
                 })
             })
 
@@ -52,6 +58,23 @@
 
 </script>
 
+<style>
+
+    body {
+        font-family: arial;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    td, th{
+        padding: 5px 10px;
+        border: 1px solid black;
+    }
+
+</style>
+
 
 </head>
 
@@ -69,6 +92,7 @@
 <tr>
 <th>ID</th>
 <th>Date</th>
+<th>Type</th>
 <th>Count</th>
 <th>Weater</th>
 <th>Notes</th>

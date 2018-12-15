@@ -3,11 +3,12 @@ import {makeHttpRequest} from './helper.js';
 
 export class Log {
     
-    constructor(startTime = new Date(), fileName, id, weather, notes) {
+    constructor(logType, startTime = new Date(), fileName, id, weather, notes) {
 
         // If starttime is a string try and create a date from it and then assign it. 
         // Otherwise it's a date and it can be assigned directly. 
-        this.startTime = typeof startTime == "string" ? new Date(startTime) : startTime
+        this.startTime = typeof startTime == "string" ? new Date(startTime) : startTime;
+        this.logType = logType;
         this.data = [];
         this.currentCount = 0; 
         this.fileName = fileName; 
@@ -80,6 +81,7 @@ export class Log {
 
             // Build the object that will be sent to the API
             let body = {
+                'logType': this.logType,
                 'date': this.startTime, 
                 'fileName': this.fileName, 
                 'weather': this.weather,
@@ -271,9 +273,10 @@ export class Log {
 
             res = JSON.parse(res);
 
-            console.log(res);
+            // Remove once I add log
+            res.log = 'video';
 
-            let log = new Log(new Date(res.start_time), res.file_name, res.log_id, res.weather, res.notes);
+            let log = new Log(res.log_type, res.logType, new Date(res.start_time), res.file_name, res.log_id, res.weather, res.notes);
             log.data = res.entries.map(entry => {
                 return {count: Number(entry.count), time: Number(entry.time), uploaded: true}
             });
@@ -320,6 +323,7 @@ export class OfflineLog extends Log {
     generateDBInsertObject() {
         // Build the object that will be sent to the API
         let body = {
+            'logType': this.logType,
             'date': this.startTime, 
             'fileName': this.fileName, 
             'weather': this.weather,
@@ -334,7 +338,7 @@ export class OfflineLog extends Log {
     }
 
     static fromData(data) {
-        let log = new OfflineLog(data.startTime, undefined, undefined, data.weather, data.notes);
+        let log = new OfflineLog(data.logType, data.startTime, undefined, undefined, data.weather, data.notes);
         log.data = data.data;
         return log; 
     }

@@ -11,7 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     // /logs/$log_id
     if ($_GET['log_id']) {
-        $query = "SELECT * FROM logs WHERE log_id = ".$_GET['log_id'];
+        $query = "SELECT * FROM logs 
+        INNER JOIN logtypes ON logtypes.logtype_id = logs.logType
+        WHERE log_id = ".$_GET['log_id'];
         $result = $mysqli->query($query) OR DIE($mysqli->error);
         $logRow = $result->fetch_assoc();
 
@@ -19,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $isodata = $datetime->format(DateTime::ATOM);
 
         $data = array(
+            'log_type' => $logRow['logtype_name'],
             'log_id' => $logRow['log_id'], 
             'start_time' => $isodata, 
             'file_name' => $logRow['file_name'],
@@ -44,8 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 // /logs
 // List of all logs
     else {
-        $query = "SELECT logs.log_id, date, sum(entries.count) as count, weather, notes FROM logs
+        $query = "SELECT logs.log_id, date, sum(entries.count) as count, weather, notes, logtype_name FROM logs
         left join entries on entries.log_id = logs.log_id
+        LEFT JOIN logtypes ON logtypes.logtype_id = logs.logType
         group by logs.log_id
         ORDER BY logs.date DESC";
         $result = $mysqli->query($query) OR DIE($mysqli->error);
@@ -59,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             
             $data[] = array(
                 'id'=>$row['log_id'], 
+                'log_type'=>$row['logtype_name'],
                 'date'=> $isodata, 
                 'totalCount' => $row['count'],
                 'weather' => $row['weather'],
@@ -122,6 +127,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $returnData = array('logId' => $log_id);
         }
 
+        $returnData['postData'] = $data;
+
         header('Content-type: application/json');
         echo json_encode($returnData);
 
@@ -136,9 +143,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
 
     // /logs/$log_id
     if ($_GET['log_id']) {
-
-        print_R($data);
-
         
         $log_id = $_GET['log_id'];
 
@@ -192,8 +196,14 @@ function insertLog($data) {
         $filename = $mysqli->real_escape_string($data['fileName']);
         $weather = $mysqli->real_escape_string($data['weather']);
         $notes = $mysqli->real_escape_string($data['notes']);
+        $logType = $data['logType'];
 
-        $query = "INSERT INTO logs (date, file_name, weather, notes) VALUES ('$date','$filename','$weather','$notes')";
+        // Get the logtype_id
+        $query = "SELECT logtype_id FROM logtypes WHERE name = '$logType'";
+        $result = $mysqli->query($query) OR DIE($mysqli->error);
+        $logtype_id = $result->fetch_assoc()['logtype_id'];
+
+        $query = "INSERT INTO logs (logType, date, file_name, weather, notes) VALUES ('$logtype_id','$date','$filename','$weather','$notes')";
         $logResult = $mysqli->query($query) OR DIE($mysqli->error);
 
         $log_id = $mysqli->insert_id;

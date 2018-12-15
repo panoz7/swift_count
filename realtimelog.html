@@ -95,7 +95,7 @@
 
     function displayRecorder() {
 
-        log = log ? log : new OfflineLog(new Date());
+        log = log ? log : new OfflineLog('realTime', new Date());
 
         showView('logRecorder');
 
