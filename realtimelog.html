@@ -8,26 +8,110 @@
     import {LogCache} from './modules/logcache.js'
     import {OfflineLog} from './modules/log.js';
 
+    // Global variables
     let logCache = new LogCache();
+    let log; 
 
+    window.onload = setup;
+
+    function setup() {
+        createNewLog();
+    }
+
+    function createNewLog() {
+
+        log = new OfflineLog(new Date())
+
+        let addButtons = document.getElementsByClassName('addBird');
+        for (let button of addButtons) {
+            button.addEventListener('click', addBird)
+        }
+
+        document.getElementById('saveLog').addEventListener('click', saveLog);
+    }
+
+    function addBird(e) {
+        // Add the birds to the log
+        let num = Number(e.target.value);
+        log.addData(num);
+
+        // Display the new total
+        document.getElementById('currentTotal').innerHTML = log.currentCount;
+    }
+
+    function saveLog() {
+        // Add the log to the log cache and remove the temporary currentLog storage
+        logCache.addLog(log);
+        localStorage.removeItem('currentLog');
+
+        // If we're online upload the log cache
+        if (navigator.onLine) {
+            logCache.addToDb()
+            .then(() => {
+                console.log("added to database")
+            })
+        }
+        else {
+            console.log("saved to local storage")
+        }
+
+    }
+
+
+    /*
+
+    Stuff we need to handle: 
+    - On launch check: 
+        - Check to see if there are any inprogress logs
+            -If so ask if they want to resume, save, or delete
+        - Check to see if we have internet connectivity and if there are logs in the log cache
+            - If so upload the log cache
+
+    - 
+        
+    - Resuming an in progress log that wasn't saved
+    - Saving an in progress log 
+    - Delete an in progress log 
+
+    - If we have internet connectivity and there are logs in the log cache upload them
+    
+    - Create new log
+    
+    - Buttons we need
+        - Add 1, 2, 5, 10
+        - Remove 1, 2, 5, 10
+        - Undo last entry (pops the last item off the data array)
+        - Save
+
+    
+
+    */
 
 
     // import {makeHttpRequest} from './modules/helper.js';
 
-    let startTime = new Date();
 
-    let log = new OfflineLog(startTime);
 
-    for (var i = 0; i < 20; i++) {
-        log.addData(1, new Date(startTime.getTime() + i * 1000));
-    }
+
+
+    // let startTime = new Date();
+
+    // let log = new OfflineLog(startTime);
+
+    // for (var i = 0; i < 20; i++) {
+    //     log.addData(1, new Date(startTime.getTime() + i * 1000));
+    // }
     
-    logCache.addLog(log);
+    // logCache.addLog(log);
 
-    logCache.addToDb()
-        .then(() => {
-            console.log(logCache);
-        })
+    // logCache.addToDb()
+    //     .then(() => {
+    //         console.log(logCache);
+    //     })
+
+
+
+
 
 
     // // log.addLogToDb()
@@ -80,4 +164,26 @@
 
 
 </head>
+
+<body>
+
+<input type='button' class='addBird' value='+1'>
+<input type='button' class='addBird' value='+2'>
+<input type='button' class='addBird' value='+5'>
+<input type='button' class='addBird' value='+10'>
+
+<input type='button' class='addBird' value='-1'>
+<input type='button' class='addBird' value='-2'>
+<input type='button' class='addBird' value='-5'>
+<input type='button' class='addBird' value='-10'>
+
+<div id='currentTotal'>a</div>
+
+<input type='button' id='saveLog' value='Done'>
+
+
+</body>
+
+
+
 </html>
