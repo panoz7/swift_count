@@ -3,6 +3,14 @@
 <head>
     <title>Realtime log</title>
 
+<style>
+
+    .hide {
+        display: none;
+    }
+
+</style>
+
 <script type='module'>
 
     import {LogCache} from './modules/logcache.js'
@@ -15,12 +23,47 @@
     window.onload = setup;
 
     function setup() {
-        createNewLog();
+        
+        // Check to see if there's an in progress log that hasn't been saved
+        if (localStorage.getItem('currentLog')) handleInProgressLog();
+
+        document.getElementById('createNew').addEventListener('click', displayRecorder);
+
     }
 
-    function createNewLog() {
+    function handleInProgressLog() {
 
-        log = new OfflineLog(new Date())
+        showView('inProgressLog');
+
+        // Create a new log from the localstorage data and save it to the global log variable;
+        let logData = JSON.parse(localStorage.getItem('currentLog'))
+        log = new OfflineLog(logData.startTime, logData.data);
+
+        // Resume
+        document.getElementById('resumeInProgress').addEventListener('click', displayRecorder);
+        
+        // Save
+        document.getElementById('saveInProgress').addEventListener('click', saveLog);
+        
+        // Delete
+        document.getElementById('deleteInProgress').addEventListener('click', () => {
+            let remove = window.confirm("Are you sure you want to delete the log? This cannot be undone.")
+            if (remove) {
+                localStorage.removeItem('currentLog')
+                showView('welcomeScreen');
+            };
+        })
+
+
+    }
+
+    function displayRecorder() {
+
+        log = log ? log : new OfflineLog(new Date());
+
+        showView('logRecorder');
+
+        document.getElementById('currentTotal').innerHTML = log.currentCount;
 
         let addButtons = document.getElementsByClassName('addBird');
         for (let button of addButtons) {
@@ -58,6 +101,14 @@
     }
 
 
+    function showView(id) {
+        let views = document.getElementsByClassName('view');
+        for (let view of views) {
+            if (view.id == id) view.classList.remove('hide');
+            else view.classList.add('hide');
+        }
+    }
+
     /*
 
     Stuff we need to handle: 
@@ -87,79 +138,6 @@
 
     */
 
-
-    // import {makeHttpRequest} from './modules/helper.js';
-
-
-
-
-
-    // let startTime = new Date();
-
-    // let log = new OfflineLog(startTime);
-
-    // for (var i = 0; i < 20; i++) {
-    //     log.addData(1, new Date(startTime.getTime() + i * 1000));
-    // }
-    
-    // logCache.addLog(log);
-
-    // logCache.addToDb()
-    //     .then(() => {
-    //         console.log(logCache);
-    //     })
-
-
-
-
-
-
-    // // log.addLogToDb()
-    // //     .then((res) => {
-    // //         console.log(res);
-    // //     })
-
-    // Get any saved swift logs from local storage
-    // let swiftLogsData = localStorage.getItem('swiftLogs')
-    // let swiftLogs = swiftLogsData ? JSON.parse(swiftLogsData) : [];
-
-    // Add the current log to the swiftLogs array
-    // let localStorageLog = log.generateLocalStorageObject();
-    // swiftLogs.push(localStorageLog);
-
-    // Save the updated swiftLogs data back to local storage
-    // localStorage.setItem('swiftLogs', JSON.stringify(swiftLogs));
-
-    // syncLogsToDb(swiftLogs);
-
-    // console.log(swiftLogs);
-
-    // // log.addLogToDb();
-
-    // function syncLogsToDb(logs) {
-
-    //     logs = logs.map(logData => {
-    //         let log = new OfflineLog(logData.startTime);
-    //         log.data = logData.data;
-    //         return log;
-    //     }).map(log => log.generateDBInsertObject())
-
-    //     makeHttpRequest('api/logs','POST',JSON.stringify(logs),'application/json')
-    //         .then(res => {
-    //             res = JSON.parse(res);
-    //             if (res.logIds) {
-    //                 console.log("Success!");
-
-    //                 // Erase the log storage cache
-    //                 swiftLogs = [];
-    //                 localStorage.setItem('swiftLogs', []);
-    //             }
-    //         })
-
-    // }
-
-
-
 </script>
 
 
@@ -167,20 +145,36 @@
 
 <body>
 
-<input type='button' class='addBird' value='+1'>
-<input type='button' class='addBird' value='+2'>
-<input type='button' class='addBird' value='+5'>
-<input type='button' class='addBird' value='+10'>
+<div id='welcomeScreen' class='view'>
+    <h2>Swift Log</h2>
+    <input type='button' id='createNew' value='Create New Log'>
+</div>
 
-<input type='button' class='addBird' value='-1'>
-<input type='button' class='addBird' value='-2'>
-<input type='button' class='addBird' value='-5'>
-<input type='button' class='addBird' value='-10'>
+<div id='inProgressLog' class='view hide'>
+    <p>There's an in progress log. What would you like to do with it?</p>
+    <input type='button' id='resumeInProgress' value='Resume'>
+    <input type='button' id='saveInProgress' value='Save'>
+    <input type='button' id='deleteInProgress' value='Delete'>
 
-<div id='currentTotal'>a</div>
+</div>
 
-<input type='button' id='saveLog' value='Done'>
+<div id='logRecorder' class='view hide'>
 
+    <input type='button' class='addBird' value='+1'>
+    <input type='button' class='addBird' value='+2'>
+    <input type='button' class='addBird' value='+5'>
+    <input type='button' class='addBird' value='+10'>
+
+    <input type='button' class='addBird' value='-1'>
+    <input type='button' class='addBird' value='-2'>
+    <input type='button' class='addBird' value='-5'>
+    <input type='button' class='addBird' value='-10'>
+
+    <div id='currentTotal'>a</div>
+
+    <input type='button' id='saveLog' value='Done'>
+
+</div>
 
 </body>
 
