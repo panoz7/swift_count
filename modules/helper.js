@@ -12,6 +12,10 @@ export function leftPad(string,len,char = ' ') {
 
 }
 
+export function formatDateForDisplay(date) {
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+}
+
 export function formatTimeForDisplay(time) {
     return `${leftPad(time.getHours(),2,0)}:${leftPad(time.getMinutes(),2,0)}:${leftPad(time.getSeconds(),2,0)}`;
 }
