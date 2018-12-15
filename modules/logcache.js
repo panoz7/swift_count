@@ -57,4 +57,9 @@ export class LogCache {
         return this.logs.length > 0;
     }
 
+    clearCache() {
+        this.logs = [];
+        this.saveLogs();
+    }
+
 }
