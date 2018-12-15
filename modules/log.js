@@ -283,6 +283,7 @@ export class OfflineLog extends Log {
         this.currentCount += count;
         const delta = time.getTime() - this.startTime.getTime();
         this.data.push({time: delta, count});
+        this.saveInProgress();
     }
 
     generateLocalStorageObject() {
@@ -304,28 +305,8 @@ export class OfflineLog extends Log {
         return body;
     }
 
-    // addLogToDb() {
-
-
-    //     // Grab the data that hasn't been uploaded yet and set its upload status to pending
-    //     let data = this.data;
-    //     data.forEach(entry => {entry.uploaded = "pending"})
-
-    //     // Build the object that will be sent to the API
-    //     let body = {
-    //         'date': this.startTime, 
-    //         'fileName': this.fileName, 
-    //         'weather': this.weather,
-    //         'notes': this.notes,
-    //         'data': data
-    //     }
-
-    //     makeHttpRequest('api/logs','POST',JSON.stringify(body),'application/json')
-    //     .then(res => {
-    //         console.log(res);
-    //     })
-
-
-    // }
+    saveInProgress() {
+        localStorage.setItem('currentLog', JSON.stringify(this.generateLocalStorageObject()));
+    }
 
 }
