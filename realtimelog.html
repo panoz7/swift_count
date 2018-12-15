@@ -19,6 +19,7 @@
 
     // Global variables
     let logCache = new LogCache();
+
     let log; 
 
     window.onload = setup;
@@ -31,10 +32,52 @@
         // If there's an inprogress log that hasn't been saved prompt the user about how to handle it
         if (localStorage.getItem('currentLog')) handleInProgressLog();
 
-        // New Log Button
-        document.getElementById('createNew').addEventListener('click', displayRecorder);
+        // Bind all the event listeners
+        addEventListeners();
 
     }
+
+
+    function addEventListeners() {
+
+        // welcomeScreen View
+        document.getElementById('createNew').addEventListener('click', displayRecorder);
+
+        // inProgressLog view
+        document.getElementById('resumeInProgress').addEventListener('click', displayRecorder);
+        document.getElementById('saveInProgress').addEventListener('click', handleSave);
+        document.getElementById('deleteInProgress').addEventListener('click', handleDiscard);
+
+        // logRecorder view
+        document.getElementById('saveLog').addEventListener('click', handleSave);
+        document.getElementById('undo').addEventListener('click', handleUndo);
+        document.getElementById('redo').addEventListener('click', handleRedo);
+        let addButtons = document.getElementsByClassName('addBird');
+        for (let button of addButtons) {
+            button.addEventListener('click', addBird)
+        }
+
+        // saveFields view
+        document.getElementById('save').addEventListener('click', (e) => {
+            log.weather = e.target.form.weather.value;
+            log.notes = e.target.form.notes.value;
+            saveLog();
+        });
+        document.getElementById('discard').addEventListener('click', handleDiscard);
+
+    }
+
+
+    function handleDiscard() {
+        let remove = window.confirm("Are you sure you want to discard this log? This cannot be undone.")
+        if (remove) {
+            localStorage.removeItem('currentLog')
+            log = undefined;
+            showView('welcomeScreen');
+        };
+    }
+
+
 
     function handleInProgressLog() {
 
@@ -47,23 +90,6 @@
         document.getElementById('inProgressLogDate').innerHTML = formatDateForDisplay(log.startTime);
         document.getElementById('inProgressLogCount').innerHTML = log.currentCount + (log.currentCount == 1 ? " bird" : " birds");
 
-        // Resume Button
-        document.getElementById('resumeInProgress').addEventListener('click', displayRecorder);
-        
-        // Save Button
-        document.getElementById('saveInProgress').addEventListener('click', saveLog);
-        
-        // Delete Button
-        document.getElementById('deleteInProgress').addEventListener('click', () => {
-            let remove = window.confirm("Are you sure you want to delete the log? This cannot be undone.")
-            if (remove) {
-                localStorage.removeItem('currentLog')
-                log = undefined;
-                showView('welcomeScreen');
-            };
-        })
-
-
     }
 
 
@@ -74,15 +100,6 @@
         showView('logRecorder');
 
         document.getElementById('currentTotal').innerHTML = log.currentCount;
-
-        let addButtons = document.getElementsByClassName('addBird');
-        for (let button of addButtons) {
-            button.addEventListener('click', addBird)
-        }
-
-        document.getElementById('saveLog').addEventListener('click', saveLog);
-        document.getElementById('undo').addEventListener('click', handleUndo);
-        document.getElementById('redo').addEventListener('click', handleRedo);
 
     }
 
@@ -104,6 +121,21 @@
 
         // Display the new total
         document.getElementById('currentTotal').innerHTML = log.currentCount;
+    }
+
+    function handleSave(e) {
+        if (log.data.length > 0) {
+            
+            // Zero out the weather and notes fileds
+            let weather = document.getElementById('weather').value = "";
+            let notes = document.getElementById('notes').value = "";
+
+            // Show the save fields view
+            showView('saveFields');
+        }
+        else {
+            showView("welcomeScreen");
+        }
     }
 
     function getStatusMessage() {
@@ -136,6 +168,7 @@
             // Save the log to the log cache
             logCache.addLog(log);
             localStorage.removeItem('currentLog');
+            log = undefined;
         }
 
         // Display the home view
@@ -156,7 +189,8 @@
                 .then(() => {
                     statusOut.innerHTML = "Online: All logs synced";
                 })
-                .catch(() => {
+                .catch((e) => {
+                    console.log(e);
                     statusOut.innerHTML = "Error syncing logs. All data is still saved locally and will be resynced the next time you launch the app.";
                 })
         }
@@ -206,6 +240,19 @@
         <li><input type='button' id='saveInProgress' value='Save'></li>
         <li><input type='button' id='deleteInProgress' value='Delete'></li>
     </ul>
+</div>
+
+<div id='saveFields' class='view hide'>
+    <form>
+        <label>Weather</label>
+        <textarea id='weather'></textarea>
+        <label>Notes</label>
+        <textarea id='notes'></textarea>
+        <ul>
+            <li><input type='button' id='save' value='Save'></li>
+            <li><input type='button' id='discard' value='Discard'></li>
+        </ul>
+    </form>
 </div>
 
 <div id='logRecorder' class='view hide'>
