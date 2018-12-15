@@ -12,11 +12,7 @@ export class LogCache {
 
         if (swiftLogsData) {
             swiftLogsData = JSON.parse(swiftLogsData);
-            return swiftLogsData.map(logData => {
-                let log = new OfflineLog(logData.startTime);
-                log.data = logData.data;
-                return log;
-            })
+            return swiftLogsData.map(logData => new OfflineLog(logData.startTime, logData.data))
         }
 
         return [];
@@ -62,5 +58,4 @@ export class LogCache {
         this.logs = [];
         this.saveLogs();
     }
-
 }
