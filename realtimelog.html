@@ -15,6 +15,7 @@
 
     import {LogCache} from './modules/logcache.js'
     import {OfflineLog} from './modules/log.js';
+    import {formatDateForDisplay} from './modules/helper.js';
 
     // Global variables
     let logCache = new LogCache();
@@ -23,8 +24,11 @@
     window.onload = setup;
 
     function setup() {
-        
-        // Check to see if there's an in progress log that hasn't been saved
+
+        // Attempt to sync with the database
+        attemptDbSync();
+
+        // If there's an inprogress log that hasn't been saved prompt the user about how to handle it
         if (localStorage.getItem('currentLog')) handleInProgressLog();
 
         document.getElementById('createNew').addEventListener('click', displayRecorder);
@@ -39,13 +43,19 @@
         let logData = JSON.parse(localStorage.getItem('currentLog'))
         log = new OfflineLog(logData.startTime, logData.data);
 
-        // Resume
+        console.log(log.currentCount);
+
+        document.getElementById('inProgressLogDate').innerHTML = formatDateForDisplay(log.startTime);
+        document.getElementById('inProgressLogCount').innerHTML = log.currentCount + (log.currentCount == 1 ? " bird" : " birds");
+
+
+        // Resume Button
         document.getElementById('resumeInProgress').addEventListener('click', displayRecorder);
         
-        // Save
+        // Save Button
         document.getElementById('saveInProgress').addEventListener('click', saveLog);
         
-        // Delete
+        // Delete Button
         document.getElementById('deleteInProgress').addEventListener('click', () => {
             let remove = window.confirm("Are you sure you want to delete the log? This cannot be undone.")
             if (remove) {
@@ -56,6 +66,7 @@
 
 
     }
+
 
     function displayRecorder() {
 
@@ -73,6 +84,17 @@
         document.getElementById('saveLog').addEventListener('click', saveLog);
     }
 
+    function getStatusMessage() {
+        let message = "";
+        let logCount = logCache.logs.length; 
+    
+        message = navigator.onLine ? "Online: " : "Offline: ";
+        if (logCount == 0) message += "All logs synced";
+        else message += `${logCount} ${logCount == 1 ? "log" : "logs"} waiting to be synced`;
+    
+        return message;
+    }
+
     function addBird(e) {
         // Add the birds to the log
         let num = Number(e.target.value);
@@ -84,20 +106,37 @@
 
     function saveLog() {
         // Add the log to the log cache and remove the temporary currentLog storage
-        logCache.addLog(log);
-        localStorage.removeItem('currentLog');
 
-        // If we're online upload the log cache
-        if (navigator.onLine) {
+        if (log.data.length > 0) {
+            // Save the log to the log cache
+            logCache.addLog(log);
+            localStorage.removeItem('currentLog');
+        }
+
+        // Display the home view
+        showView("welcomeScreen")
+
+        // Attempt to sync with the database
+        attemptDbSync();
+
+    }
+
+    function attemptDbSync() {
+        let statusOut = document.getElementById('status')
+
+        if (navigator.onLine && logCache.hasLogs()) {
+            statusOut.innerHTML = "Syncing Logs...";
+
             logCache.addToDb()
-            .then(() => {
-                console.log("added to database")
-            })
-        }
-        else {
-            console.log("saved to local storage")
+                .then(() => {
+                    statusOut.innerHTML = "Online: All logs synced";
+                })
+                .catch(() => {
+                    statusOut.innerHTML = "Error syncing logs. All data is still saved locally and will be resynced the next time you launch the app.";
+                })
         }
 
+        else statusOut.innerHTML = getStatusMessage();
     }
 
 
@@ -144,18 +183,24 @@
 </head>
 
 <body>
-
+ 
 <div id='welcomeScreen' class='view'>
-    <h2>Swift Log</h2>
+    <h2>Swift Logger</h2>
     <input type='button' id='createNew' value='Create New Log'>
+    <h4>Status</h4>
+    <p id='status'></p>
 </div>
 
 <div id='inProgressLog' class='view hide'>
-    <p>There's an in progress log. What would you like to do with it?</p>
-    <input type='button' id='resumeInProgress' value='Resume'>
-    <input type='button' id='saveInProgress' value='Save'>
-    <input type='button' id='deleteInProgress' value='Delete'>
-
+    <h2>Swift Log</h2>
+    <h3>Unsaved Log</h3>
+    <p>On <span id='inProgressLogDate'></span> you logged <span id='inProgressLogCount'></span> but you did not save.</p>
+    <p>What would you like to do with the log?</p>
+    <ul>
+        <li><input type='button' id='resumeInProgress' value='Resume Logging'></li>
+        <li><input type='button' id='saveInProgress' value='Save'></li>
+        <li><input type='button' id='deleteInProgress' value='Delete'></li>
+    </ul>
 </div>
 
 <div id='logRecorder' class='view hide'>
