@@ -20,6 +20,10 @@ table td, table th {
     padding: 5px;
 }
 
+.hide {
+    display: none
+}
+
 
 </style>
 
@@ -56,11 +60,13 @@ async function loadLog(id) {
     document.getElementById('date').innerHTML = date;
 
     // Add notes and weather text
-    document.getElementById('notes').innerHTML = log.notes;
-    document.getElementById('weather').innerHTML = log.weather;
+    document.getElementById('notes').innerHTML = log.notes ? log.notes : "No notes entered";
+    document.getElementById('weather').innerHTML = log.weather ? log.weather: "No weather information entered";
 
     // Update the edit log link
-    document.getElementById('editLog').href = `videolog.html?id=${id}`
+    let editLogLink = document.getElementById('editLog');
+    if (log.logType == 'video') editLogLink.href = `videolog.html?id=${id}`;
+    else editLogLink.parentNode.classList.add("hide");
     
     // Output the raw data
     let rawDataTable = document.getElementById('rawLog');
