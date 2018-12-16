@@ -184,7 +184,9 @@
 
         if (navigator.onLine && logCache.hasLogs()) {
             statusOut.innerHTML = "Syncing Logs...";
-
+            
+            console.log(logCache);
+            
             logCache.addToDb()
                 .then(() => {
                     statusOut.innerHTML = "Online: All logs synced";

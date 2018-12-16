@@ -12,14 +12,17 @@
 
     import {Log} from './modules/log.js';
     import {buildRow, formatPlaybackTime} from './modules/helper.js';
+    import {EditableField} from './modules/editablefield.js';
 
     window.onload = setup;
     google.charts.load('current', {'packages':['corechart']});
 
+    var id;
+
     function setup() {
 
         const params = new URLSearchParams(location.search);
-        const id = params.get('id');
+        id = params.get('id');
 
         if (id) {
             loadLog(id);
@@ -42,9 +45,27 @@ async function loadLog(id) {
     // Add the count
     document.getElementById('count').innerHTML = log.currentCount;
 
-    // Add notes and weather text
-    document.getElementById('notes').innerHTML = log.notes ? log.notes : "No notes entered";
-    document.getElementById('weather').innerHTML = log.weather ? log.weather: "No weather information entered";
+    // Setup notes and weather fields
+    let notesField = new EditableField(
+        id,
+        'notes',
+        document.getElementById('notes'),
+        document.getElementById('editNotes'),
+        log.notes,
+        "No notes entered"
+    )
+
+    let weatherField = new EditableField(
+        id,
+        'weather',
+        document.getElementById('weather'),
+        document.getElementById('editWeather'),
+        log.weather,
+        "No weather information entered"
+    )
+
+    // document.getElementById('notes').innerHTML = log.notes ? log.notes : "No notes entered";
+    // document.getElementById('weather').innerHTML = log.weather ? log.weather: "No weather information entered";
 
     // Update the edit log link
     let editLogLink = document.getElementById('editLog');
@@ -110,10 +131,6 @@ function drawChart(tempData) {
     chart.draw(data, options);
 }
 
-
-
-
-
 </script>
 
 <body>
@@ -148,12 +165,16 @@ function drawChart(tempData) {
 
 <div class='info section'>
     <div>
-        <h3>Notes</h3>
+        <div class='title'>
+            <h3>Notes</h3><a href='#' id='editNotes'>Edit</a>
+        </div>
         <p id='notes'></p>
     </div>
 
     <div>
-        <h3>Weather</h3>
+        <div class='title'>
+            <h3>Weather</h3><a href='#' id='editWeather'>Edit</a>
+        </div>
         <p id='weather'></p>
     </div>
 </div>

@@ -177,12 +177,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
             $updates[] = "filename = '".$data['file_name']."'";
         }
 
+        if (isset($data['notes'])) {
+            $notes = $mysqli->real_escape_string($data['notes']);
+            $updates[] = "notes = '".$notes."'";
+        }
+
+        if (isset($data['weather'])) {
+            $weather = $mysqli->real_escape_string($data['weather']);
+            $updates[] = "weather = '".$weather."'";
+        }
+
         $query .= implode(",",$updates);
         $query .= " WHERE log_id = $log_id";
 
         $result = $mysqli->query($query) OR DIE($mysqli->error);
 
-        // echo $query;
+        echo $query;
         echo $result;
 
         // $query = "INSERT INTO entries (log_id, time, count) VALUES ";
@@ -221,7 +231,10 @@ function insertLog($data) {
         $result = $mysqli->query($query) OR DIE($mysqli->error);
         $logtype_id = $result->fetch_assoc()['logtype_id'];
 
+
         $query = "INSERT INTO logs (logType, date, file_name, weather, notes) VALUES ('$logtype_id','$date','$filename','$weather','$notes')";
+        
+        
         $logResult = $mysqli->query($query) OR DIE($mysqli->error);
 
         $log_id = $mysqli->insert_id;

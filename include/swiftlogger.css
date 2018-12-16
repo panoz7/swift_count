@@ -153,7 +153,7 @@
     }
 
     .info > div {
-        flex: auto;
+        flex: 1;
         margin-right: 50px;
     }
 
@@ -161,12 +161,37 @@
         margin-right: 0px;
     }
 
-    .info h3 {
+    .info .title {
+        display: flex;
+        padding-bottom: 5px;
+        margin: 0 0 10px 0;
+        border-bottom: 1px solid #999;
+
+    }
+
+    .info .title h3, .info .title a {
+        flex: auto;
+        margin: 0;
+        padding: 0;
+        align-self: flex-end;
+    }
+
+
+    .info .title a {
+        text-align: right;
+    }
+
+    /* .info h3 {
         border-bottom: 1px solid #999;
         padding-bottom: 5px;
         margin: 0 0 10px 0;
-    }
+    } */
 
     .chart {
+        border: 1px solid #999;
+    }
+
+    .editing {
+        background-color: white;
         border: 1px solid #999;
     }
