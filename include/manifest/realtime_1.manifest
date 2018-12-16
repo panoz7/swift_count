@@ -1,0 +1,16 @@
+CACHE MANIFEST
+# This is a comment.
+# Cache manifest version 0.0.20
+
+CACHE: 
+../../realtimelog.html
+../../modules/helper.js
+../../modules/log.js
+../../modules/logcache.js
+../../include/realtimelog.css
+../../images/redoicon.svg
+../../images/undoicon.svg
+https://fonts.googleapis.com/css?family=Nunito+Sans
+
+NETWORK:
+*

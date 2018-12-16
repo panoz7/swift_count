@@ -28,8 +28,8 @@ export class LogCache {
     }
 
     addToDb() {
+
         return new Promise((resolve,reject) => {
-            
             // Build an array of the logs in the format the API expects
             let logData = this.logs.map(log => log.generateDBInsertObject())
 

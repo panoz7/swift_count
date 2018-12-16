@@ -221,24 +221,7 @@ export class Log {
     
     }
 
-    undo() {
-        let entry = this.data.pop();
 
-        if (entry) {
-            this.currentCount -= entry.count;
-            this.redoCache.push(entry);
-        }
-
-    }
-
-    redo() {
-        let entry = this.redoCache.pop();
-        
-        if (entry) {
-            this.currentCount += entry.count;
-            this.data.push(entry);
-        }
-    }
 
 
 
@@ -335,6 +318,28 @@ export class OfflineLog extends Log {
 
     saveInProgress() {
         localStorage.setItem('currentLog', JSON.stringify(this.generateLocalStorageObject()));
+    }
+
+    undo() {
+        let entry = this.data.pop();
+
+        if (entry) {
+            this.currentCount -= entry.count;
+            this.redoCache.push(entry);
+        }
+
+        this.saveInProgress();
+    }
+
+    redo() {
+        let entry = this.redoCache.pop();
+        
+        if (entry) {
+            this.currentCount += entry.count;
+            this.data.push(entry);
+        }
+
+        this.saveInProgress();
     }
 
     static fromData(data) {

@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito+Sans');
+
+    body {
+        margin: 0px;
+        font-family: 'Nunito Sans', arial;
+        font-size: 13px;
+        background-color: #fafafa;
+    }
+
+    .view {
+        box-sizing: border-box;
+        padding: 10px;
+    }
+
+    .hide {
+        display: none !important;
+    }
+
+    #welcomeScreen, #inProgressLog {
+        text-align: center;
+    }
+
+    h4 {
+        font-size: 14px;
+        margin: 0px;
+        padding: 0px;
+        margin-bottom: 5px;
+    }
+
+    p {
+        margin: 0 0 5px 0;
+        padding: 0px;
+    }
+
+    ul.buttonList {
+        list-style: none;
+        margin: 10px 0 10px 0;
+        padding: 0;
+    }
+
+    #inProgressLogDate, #inProgressLogCount {
+        font-weight: bold;
+    }
+
+    button {
+        width: 100%;
+        background-color: white;
+        border: 1px solid #666;
+        padding: 10px;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    label {
+        display: inline;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+
+    textarea {
+        width: 100%;
+        height: 100px;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    #logRecorder {
+        padding: 0px;
+        display: flex;
+        height: 100%;
+        color: white;
+    }
+    
+
+    #logRecorder > div {
+        flex: 1 1 auto;
+    }
+
+    #logRecorder div.data {
+        background-color: black;
+        flex: 0 0 250px;
+        padding: 10px;
+        text-align: center;
+    }
+
+    div.controls {
+        background-color: orange;
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #333;
+    }
+
+    /* div.add {
+        border-right: 1px solid #333;
+    }
+
+    div.subtract {
+        border-left: 1px solid #333
+    } */
+
+    .controls .primary {
+        flex: 3;
+        border-bottom: 1px solid #333;
+    }
+
+    .controls .secondary {
+        flex: 1;
+        display: flex;
+    }
+
+    .controls .secondary > button {
+        flex: 1;
+        border-right: 1px solid #333;
+    }
+
+    .controls .secondary > button:last-child {
+        border: 0px;
+    }
+
+
+    .controls button {
+        background-color: #111;
+        color: white;
+        border: 0px;
+        box-sizing: border-box;
+        font-size: 20px;
+        color: #ccc;
+        margin: 0;
+    }
+
+    .controls button:active {
+        background-color: black;
+        color: white;
+    }
+
+    h3#currentTotal {
+        font-size: 40px;
+        text-align: center;
+        margin: 20px 0 20px 0;
+        padding-bottom: 20px;
+    }
+
+    #undo, #redo {
+        width: 25px;
+        height: 25px;
+        border: 0;
+        background-image: url('../images/undoicon.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        color: transparent;
+        background-color: transparent;
+        margin-right: 35px;
+    }
+
+    #redo {
+        margin-right: 0px;
+        background-image: url('../images/redoicon.svg');
+    }
+
+    #undo:disabled, #redo:disabled {
+        opacity: .25
+    }
+
+    #saveLog {
+        background-color: #111;
+        border: 1px solid #333;
+        color: white;
+        margin-top: 35px;
+        font-size: 16px;
+        padding: 10px;
+    }
+
+
+    @media (max-aspect-ratio: 1/1) {
+        #logRecorder {
+            flex-direction: column;
+        }
+
+
+        #logRecorder div.data {
+            background-color: #111;
+            flex: 0 0 250px;
+        }
+
+    }

@@ -1,0 +1,124 @@
+<html>
+
+<head>
+
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name = "viewport" content = "user-scalable=no, width=device-width">
+        <meta name="apple-mobile-web-app-title" content="SWIFTS">
+
+<style>
+
+    @import url('https://fonts.googleapis.com/css?family=Nunito+Sans');
+
+    body {
+        margin: 0px;
+        font-family: 'Nunito Sans', arial;
+    }
+
+    .recorder {
+        background-color: blue;
+        display: flex;
+        height: 100%;
+        color: white;
+    }
+
+    .recorder > div {
+        flex: 1 1 auto;
+    }
+
+    div.controls {
+        background-color: orange;
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+    }
+
+    div.add {
+        border-right: 1px solid #333;
+    }
+
+    div.subtract {
+        border-left: 1px solid #333
+    }
+
+    .primary {
+        flex: 3;
+        border-bottom: 1px solid #333;
+    }
+
+    .secondary {
+        flex: 1;
+        display: flex;
+    }
+
+    .secondary > button {
+        flex: 1;
+        border-right: 1px solid #333;
+    }
+
+    .secondary > button:last-child {
+        border: 0px;
+    }
+
+    div.data {
+        background-color: #111;
+        flex: 0 0 200px;
+    }
+
+
+
+    button {
+        background-color: #111;
+        color: white;
+        border: 0px;
+        box-sizing: border-box;
+        font-size: 20px;
+        color: #ccc;
+        margin: 0;
+        /* -webkit-tap-highlight-color: red; */
+        /* -webkit-tap-fill-color: white; */
+    }
+
+    button:active {
+        background-color: black;
+        color: white;
+    }
+
+    h3#count {
+        font-size: 40px;
+        text-align: center;
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class='recorder'>
+
+    <div class='controls add'>
+        <button class='primary'>+1</button>
+        <div class='secondary'>
+            <button>+2</button>
+            <button>+5</button>
+            <button>+10</button>
+        </div>
+    </div>
+
+    <div class='data'>
+
+        <h3 id='count'>1250</h3>
+
+    </div>
+
+    <div class='controls subtract'>
+        <button class='primary'>-1</button>
+        <div class='secondary'>
+            <button>-2</button>
+            <button>-5</button>
+            <button>-10</button>
+        </div>
+    </div>
+
+</div>

@@ -1,15 +1,16 @@
-<html>
+<html manifest="include/manifest/realtime_1.manifest">
+
+<!-- <html> -->
 
 <head>
-    <title>Realtime log</title>
 
-<style>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name = "viewport" content = "user-scalable=no, width=device-width">
+    <meta name="apple-mobile-web-app-title" content="Log-A-Swift 7">
 
-    .hide {
-        display: none;
-    }
+    <title>Log-A-Swift</title>
 
-</style>
+<link rel="stylesheet" href="include/realtimelog.css">
 
 <script type='module'>
 
@@ -59,6 +60,7 @@
 
         // saveFields view
         document.getElementById('save').addEventListener('click', (e) => {
+            e.preventDefault();
             log.weather = e.target.form.weather.value;
             log.notes = e.target.form.notes.value;
             saveLog();
@@ -98,6 +100,7 @@
         log = log ? log : new OfflineLog('realTime', new Date());
 
         showView('logRecorder');
+        updateUndoRedoState();
 
         document.getElementById('currentTotal').innerHTML = log.currentCount;
 
@@ -226,21 +229,21 @@
 <body>
  
 <div id='welcomeScreen' class='view'>
-    <h2>Swift Logger</h2>
-    <input type='button' id='createNew' value='Create New Log'>
+    <h2>Log-A-Swift</h2>
+    <button id='createNew'>Create New Log</button>
     <h4>Status</h4>
     <p id='status'></p>
 </div>
 
 <div id='inProgressLog' class='view hide'>
-    <h2>Swift Log</h2>
+    <h2>Log-A-Swift</h2>
     <h3>Unsaved Log</h3>
-    <p>On <span id='inProgressLogDate'></span> you logged <span id='inProgressLogCount'></span> but you did not save.</p>
-    <p>What would you like to do with the log?</p>
-    <ul>
-        <li><input type='button' id='resumeInProgress' value='Resume Logging'></li>
-        <li><input type='button' id='saveInProgress' value='Save'></li>
-        <li><input type='button' id='deleteInProgress' value='Delete'></li>
+    <p>On <span id='inProgressLogDate'></span> you logged <span id='inProgressLogCount'></span> without saving.</p>
+    <p>What would you like to do?</p>
+    <ul class='buttonList'>
+        <li><button type='button' id='resumeInProgress'>Resume Logging</button></li>
+        <li><button type='button'  id='saveInProgress'>Save Log</button></li>
+        <li><button type='button'  id='deleteInProgress'>Discard Log</button></li>
     </ul>
 </div>
 
@@ -250,16 +253,50 @@
         <textarea id='weather'></textarea>
         <label>Notes</label>
         <textarea id='notes'></textarea>
-        <ul>
-            <li><input type='button' id='save' value='Save'></li>
-            <li><input type='button' id='discard' value='Discard'></li>
+        <ul class='buttonList'>
+            <li><button type='button' id='save'>Save Log</button></li>
+            <li><button type='button' id='discard'>Discard Log</button></li>
+            <li><button type='button' id='cancelSave'>Cancel</button></li>
         </ul>
     </form>
 </div>
 
 <div id='logRecorder' class='view hide'>
 
-    <input type='button' class='addBird' value='+1'>
+        <div class='controls add'>
+                <button class='primary addBird' value='+1'>+1</button>
+                <div class='secondary'>
+                    <button class='addBird' value='+2'>+2</button>
+                    <button class='addBird' value='+5'>+5</button>
+                    <button class='addBird' value='+10'>+10</button>
+                </div>
+            </div>
+        
+            <div class='data'>
+        
+                <h3 id='currentTotal'>1250</h3>
+
+                <input type='button' id='undo' value='Undo' disabled='true'>
+                <input type='button' id='redo' value='Redo' disabled='true'>
+            
+                <br/>
+            
+                <button id='saveLog'>Done</button>
+        
+            </div>
+        
+            <div class='controls subtract'>
+                <button class='primary addBird' value='-1'>-1</button>
+                <div class='secondary'>
+                    <button class='addBird' value='-2'>-2</button>
+                    <button class='addBird' value='-5'>-5</button>
+                    <button class='addBird' value='-10'>-10</button>
+                </div>
+            </div>
+
+
+
+    <!-- <input type='button' class='addBird' value='+1'>
     <input type='button' class='addBird' value='+2'>
     <input type='button' class='addBird' value='+5'>
     <input type='button' class='addBird' value='+10'>
@@ -269,14 +306,9 @@
     <input type='button' class='addBird' value='-5'>
     <input type='button' class='addBird' value='-10'>
 
-    <div id='currentTotal'>a</div>
+    <div id='currentTotal'>a</div> -->
 
-    <input type='button' id='undo' value='Undo' disabled='true'>
-    <input type='button' id='redo' value='Redo' disabled='true'>
 
-    <br/>
-
-    <input type='button' id='saveLog' value='Done'>
 
 </div>
 
