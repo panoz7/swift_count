@@ -2,102 +2,42 @@
 
 <head>
 
-<script type='module'>
 
-    import {makeHttpRequest} from './modules/helper.js';
+    
+<script type='module' src='include/index.js'></script>
 
-    window.onload = setup;
-
-    function setup() {
-
-        let tbody = document.getElementById('logs');
-
-        makeHttpRequest('api/logs','GET')
-            .then((res) => {
-                res = JSON.parse(res);
-
-                console.log(res);
-                
-                res.forEach(log => {
-                    let date = new Date(log.date);
-
-                    let dateLink = document.createElement('a');
-                    dateLink.href = `log.html?id=${log.id}`;
-                    dateLink.innerHTML = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-                    
-                    let totalCount = log.totalCount ? log.totalCount : 0;
-
-                    let logDisplayNames = {
-                        realTime: "Real Time",
-                        video: "Video"
-                    } 
-                    let logName = logDisplayNames[log.log_type] ? logDisplayNames[log.log_type] : "Other";
-
-                    tbody.appendChild(buildRow([log.id, dateLink, logName, totalCount, log.weather, log.notes]))
-                })
-            })
-
-
-    }
-
-    function buildRow(cols, cellType = 'td') {
-
-        let tr = document.createElement('tr');
-
-        cols.forEach(value => {
-            let cell = document.createElement(cellType);
-
-            if (typeof value == 'object') cell.appendChild(value);
-            else cell.innerHTML = value;
-
-            tr.appendChild(cell);
-        })
-
-        return tr;
-    }
-
-</script>
-
-<style>
-
-    body {
-        font-family: arial;
-    }
-
-    table {
-        border-collapse: collapse;
-    }
-
-    td, th{
-        padding: 5px 10px;
-        border: 1px solid black;
-    }
-
-</style>
-
+<link rel="stylesheet" href="include/swiftlogger.css">
 
 </head>
 
 <body>
 
-<h2>Swift Count</h2>
-<ul>
-    <li>
-        <a href='videolog.html'>Create new log from video</a>
-    </li>
-</ul>
+    <div class='header'>
+        <div class='content'>
+        <h2>Log-A-Swift</h2>
+        <ul>
+            <li><a href='videolog.html'>New video log</a></li>
+            <li><a href='realtimelog.html'>New real time log</a></li>
+        </ul>
+    </div>
+    </div>
+
+<div class='content'>
+
+<div class='tableControls'>Year: <select id='years'></select></div>
 
 <table>
 <thead>
 <tr>
-<th>ID</th>
 <th>Date</th>
 <th>Type</th>
 <th>Count</th>
-<th>Weater</th>
+<th>Weather</th>
 <th>Notes</th>
 </tr>
 </head>
 <tbody id='logs'>
 </tbody>
 </table>
+
+</div>

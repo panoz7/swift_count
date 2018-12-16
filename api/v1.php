@@ -8,7 +8,6 @@ include ("../include/login.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-
     // /logs/$log_id
     if ($_GET['log_id']) {
         $query = "SELECT * FROM logs 
@@ -42,6 +41,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         
     }
 
+    // /years
+    if ($_GET['getyears']) {
+        $query = "SELECT DISTINCT YEAR(date) as year FROM logs ORDER BY year DESC";
+        $result = $mysqli->query($query) OR DIE($mysqli->error);
+
+        $data = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row['year'];
+        }
+
+        header('Content-type: application/json');
+        echo json_encode($data);
+    }
+
 
 
 // /logs
@@ -49,9 +63,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     else {
         $query = "SELECT logs.log_id, date, sum(entries.count) as count, weather, notes, logtype_name FROM logs
         left join entries on entries.log_id = logs.log_id
-        LEFT JOIN logtypes ON logtypes.logtype_id = logs.logType
-        group by logs.log_id
-        ORDER BY logs.date DESC";
+        LEFT JOIN logtypes ON logtypes.logtype_id = logs.logType";
+
+        if ($_GET['year'])
+            $query .= " WHERE YEAR(date) = '".$_GET['year']."'";
+
+        $query .= " group by logs.log_id
+        ORDER BY date DESC";
+
         $result = $mysqli->query($query) OR DIE($mysqli->error);
 
         $data = array();

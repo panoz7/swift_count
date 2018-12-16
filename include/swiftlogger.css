@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
+
+
+    body {
+        font-family: 'Nunito', arial;
+        background-color: #fafafa;
+        margin: 0px;
+    }
+
+    .content {
+        max-width: 1100px;
+        margin: 0px auto;
+    }
+
+    .header {
+        background-color: white;
+        border-bottom: 1px solid #999;
+        margin-bottom: 20px;
+        /* required */
+        /* width: 100%;
+        background-color: red;
+        height: 50px;
+        margin-bottom: 50px; */
+    }
+
+    h2 {
+        font-size: 20px;
+        line-height: 50px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .header .content {
+        display: flex;
+    }
+
+    .header ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    .header ul li {
+        float: left;
+        margin: 0 0 0 20px;
+        padding: 0;
+        font-size: 14px;
+        line-height: 50px;
+    }
+
+    .tableControls {
+        margin-bottom: 15px;
+    }
+
+    a {
+        color: #0036cc;
+    }
+
+    table {
+        border-collapse: collapse;
+        font-size: 13px;
+        background-color: white;
+        width: 100%;
+    }
+
+    thead {
+        position: sticky; 
+        position: -webkit-sticky;
+        top: 0;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #f0f0f0;
+    }
+
+    td {
+        padding: 10px 10px;
+        border-right: 1px solid #999;
+        border-left: 1px solid #999;
+        border-bottom: 1px solid #ccc;
+    }
+
+    th {
+        padding: 10px;
+        background-color: #444;
+        color: white;
+        text-align: left;
+        border: 1px solid #444;
+    }
