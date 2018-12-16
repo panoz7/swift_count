@@ -316,6 +316,7 @@ export class OfflineLog extends Log {
         let obj = {};
         obj.startTime = this.startTime;
         obj.data = this.data;
+        obj.logType = this.logType;
         return obj;
     }
 
