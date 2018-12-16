@@ -3,7 +3,6 @@
 include ("../include/login.php");
 
 
-
 // GET 
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -218,7 +217,7 @@ function insertLog($data) {
         $logType = $data['logType'];
 
         // Get the logtype_id
-        $query = "SELECT logtype_id FROM logtypes WHERE name = '$logType'";
+        $query = "SELECT logtype_id FROM logtypes WHERE logtype_name = '$logType'";        
         $result = $mysqli->query($query) OR DIE($mysqli->error);
         $logtype_id = $result->fetch_assoc()['logtype_id'];
 
