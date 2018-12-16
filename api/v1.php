@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     // /years
-    if ($_GET['getyears']) {
+    else if ($_GET['getyears']) {
         $query = "SELECT DISTINCT YEAR(date) as year FROM logs ORDER BY year DESC";
         $result = $mysqli->query($query) OR DIE($mysqli->error);
 
