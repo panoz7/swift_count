@@ -212,7 +212,7 @@ export class Log {
         intervals.forEach(function(interval) {
             // Add the interval's count to the running total
             runningTotal += interval.count;
-            // Replace the interval's count with the running total
+            // Add the running total to each interval
             interval.runningTotal = runningTotal; 
         })
     

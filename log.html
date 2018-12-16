@@ -74,7 +74,11 @@ async function loadLog(id) {
         let parent = editLogLink.parentElement;
         parent.parentElement.removeChild(parent);
     }
-    
+
+    // Download link
+    let downloadLogLink = document.getElementById('downloadLog');
+    downloadLogLink.href = `api/logtospreadsheet.php?id=${id}`;
+
     // Output the raw data
     let rawDataTable = document.getElementById('rawLog');
     log.data.forEach(entry => {
@@ -131,6 +135,12 @@ function drawChart(tempData) {
     chart.draw(data, options);
 }
 
+function downloadLog() {
+
+    
+
+}
+
 </script>
 
 <body>
@@ -152,6 +162,8 @@ function drawChart(tempData) {
                         <li><h2 id='date'>Date</h2></li>
                         <li><h2><span id='count'></span> Birds</h2></li>
                         <li><a id='editLog'>Edit Log</a></li>
+                        <li><a id='downloadLog'>Download .xlsx</a></li>
+
                     </ul>
                 
                 </div>
