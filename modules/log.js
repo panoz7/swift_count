@@ -277,6 +277,8 @@ export class Log {
             log.data = res.entries.map(entry => {
                 return {count: Number(entry.count), time: Number(entry.time), uploaded: true}
             });
+            
+            log.currentCount = log.data.reduce((total, entry) => {return total += entry.count}, 0);
 
             return log;
     
@@ -337,6 +339,9 @@ export class OfflineLog extends Log {
     static fromData(data) {
         let log = new OfflineLog(data.logType, data.startTime, undefined, undefined, data.weather, data.notes);
         log.data = data.data;
+        log.currentCount = data.data.reduce((total, entry) => {return total += entry.count}, 0);
+
+
         return log; 
     }
 
