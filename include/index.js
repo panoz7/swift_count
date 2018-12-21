@@ -1,41 +1,23 @@
 import {makeHttpRequest} from '../modules/helper.js';
 
+    const params = new URLSearchParams(location.search);
+    var year = params.get('year') ? params.get('year') : new Date().getFullYear();
+
+    window.onpopstate = handleNewState;
+
     window.onload = setup;
 
-    function setup() {
+    async function setup() {
 
+        // Set up the year selector dropdown
+        await initializeYearDropdown(year);
 
-        initializeTable();
-
-        // makeHttpRequest('api/logs','GET')
-        //     .then((res) => {
-        //         res = JSON.parse(res);
-
-        //         console.log(res);
-                
-        //         res.forEach(log => {
-        //             let date = new Date(log.date);
-
-        //             let dateLink = document.createElement('a');
-        //             dateLink.href = `log.html?id=${log.id}`;
-        //             dateLink.innerHTML = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-                    
-        //             let totalCount = log.totalCount ? log.totalCount : 0;
-
-        //             let logDisplayNames = {
-        //                 realTime: "Real Time",
-        //                 video: "Video"
-        //             } 
-        //             let logName = logDisplayNames[log.log_type] ? logDisplayNames[log.log_type] : "Other";
-
-        //             tbody.appendChild(buildRow([dateLink, logName, totalCount, log.weather, log.notes]))
-        //         })
-        //     })
-
+        // Populate the table
+        await populateTable(year);
 
     }
 
-    async function initializeTable() {
+    async function initializeYearDropdown(selectedYear) {
 
         var years = await makeHttpRequest('api/years', 'GET')
         years = JSON.parse(years).map(year => Number(year));
@@ -51,18 +33,37 @@ import {makeHttpRequest} from '../modules/helper.js';
             let option = document.createElement('option');
             option.value = year; 
             option.innerHTML = year;
-            if (year == currentYear) option.selected = true;
+            if (year == selectedYear) option.selected = true;
             yearSelect.appendChild(option);
         });
 
         // Add an event listener to the dropdown
         yearSelect.addEventListener('change', async (e) => {
             await populateTable(e.target.value)
+            history.replaceState({reload: false}, "", window.location.href);
+            history.pushState({}, "", `?year=${e.target.value}`);
         }) 
+    }
 
-        // Populate the table
-        await populateTable(currentYear)
+    async function handleNewState(e) {
 
+        console.log("state", e.state)
+
+        // var state = e.originalEvent.state;
+
+        // console.log(new Date())
+
+        // if (e.state) {
+        //     console.log("THERE WAS AN EVENT");
+        //     console.log(e.state);
+        // }
+
+
+        const params = new URLSearchParams(location.search);
+        year = params.get('year') ? params.get('year') : new Date().getFullYear();
+
+        document.getElementById('years').value = year;
+        populateTable(year);
     }
 
     async function populateTable(year) {
