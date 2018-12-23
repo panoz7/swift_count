@@ -1,5 +1,5 @@
 
-import {VideoPlayer} from '../modules/videoplayer3.js';
+import {VideoPlayer} from '../modules/videoplayer.js';
 import {Log} from '../modules/log.js';
 
 var video, startTime, log, slider, graph, countOut, dragCount = 0, videoFile, id, fromDB = false, videoPlayer; 
