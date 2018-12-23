@@ -24,11 +24,40 @@ export class Log {
 
         const delta = time.getTime() - this.startTime.getTime();
 
-        this.data.push({time: delta, count});
+        // Get the index where we should insert the new entry
+        let insertIndex = this.data.findIndex(entry => entry.time >= delta)
+        if (insertIndex < 0) insertIndex = this.data.length;
+
+        // Insert the data
+        this.data.splice(insertIndex,0,{time: delta, count})
+
+        console.log(this.data);
+        
         this.redoCache = [];
 
         this.syncWithDb();
     }
+
+
+    // getDataByTimeInterval(startTime,duration) {
+
+    //     const startDelta = startTime.getTime() - this.startTime.getTime();
+    //     const endDelta = startDelta + duration; 
+
+    //     var startIndex = this.data.findIndex(function(data){
+    //         return data.time >= startDelta;
+    //     })
+
+    //     var endIndex = this.data.findLastIndex(function(data){
+    //         return data.time <= endDelta;
+    //     });
+
+    //     return this.data.slice(startIndex,endIndex+1)
+    //         .map(entry => {
+    //             return {count: entry.count, time: new Date(this.startTime.getTime() + entry.time)}
+    //         });
+
+    // }
 
 
     getDataByTimeInterval(startTime,duration) {
@@ -36,20 +65,19 @@ export class Log {
         const startDelta = startTime.getTime() - this.startTime.getTime();
         const endDelta = startDelta + duration; 
 
-        var startIndex = this.data.findIndex(function(data){
-            return data.time >= startDelta;
-        })
+        var startIndex = this.data.findIndex(data => data.time >= startDelta)
 
-        var endIndex = this.data.findLastIndex(function(data){
-            return data.time <= endDelta;
-        });
+        var endIndex = this.data.findIndexFrom(data => data.time >= endDelta, startIndex);
+        if (endIndex < 0) endIndex = this.data.length;
 
-        return this.data.slice(startIndex,endIndex+1)
+        return this.data.slice(startIndex,endIndex)
             .map(entry => {
                 return {count: entry.count, time: new Date(this.startTime.getTime() + entry.time)}
             });
 
     }
+
+
 
     incrementTime(increment) {
         this.startTime = new Date(this.startTime.getTime() + increment);
@@ -284,13 +312,33 @@ Array.prototype.findLastIndex = function(test) {
 }
 
 
+Array.prototype.findIndexFrom = function(test, startIndex = 0) {
+
+    if (startIndex < 0) startIndex = 0;
+
+    for (var i = startIndex; i < this.length; i++) {
+        if (test(this[i]))
+            return i;
+    }
+
+    return -1;
+}
+
+
 export class OfflineLog extends Log {
 
     addData(count, time = new Date()) {
         count = parseInt(count);
         this.currentCount += count;
         const delta = time.getTime() - this.startTime.getTime();
-        this.data.push({time: delta, count});
+
+        // Get the index where we should insert the new entry
+        let insertIndex = this.data.findIndex(entry => entry.time >= delta)
+        if (insertIndex < 0) insertIndex = this.data.length;
+
+        // Insert the data
+        this.data.splice(insertIndex,0,{time: delta, count})
+
         this.redoCache = [];
         this.saveInProgress();
     }
