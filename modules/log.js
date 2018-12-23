@@ -8,6 +8,7 @@ export class Log {
         // If starttime is a string try and create a date from it and then assign it. 
         // Otherwise it's a date and it can be assigned directly. 
         this.startTime = typeof startTime == "string" ? new Date(startTime) : startTime;
+
         this.logType = logType;
         this.data = [];
         this.currentCount = 0; 
@@ -16,6 +17,7 @@ export class Log {
         this.weather = weather;
         this.notes = notes;
         this.redoCache = [];
+        this.syncCache = [];
     }
 
     addData(count, time = new Date()) {
@@ -28,36 +30,15 @@ export class Log {
         let insertIndex = this.data.findIndex(entry => entry.time >= delta)
         if (insertIndex < 0) insertIndex = this.data.length;
 
-        // Insert the data
-        this.data.splice(insertIndex,0,{time: delta, count})
+        // Insert the entry and add it to the sync cache
+        let entry = {time: delta, count};
+        this.data.splice(insertIndex,0,entry);
+        this.syncCache.push(entry);
 
-        console.log(this.data);
-        
         this.redoCache = [];
 
         this.syncWithDb();
     }
-
-
-    // getDataByTimeInterval(startTime,duration) {
-
-    //     const startDelta = startTime.getTime() - this.startTime.getTime();
-    //     const endDelta = startDelta + duration; 
-
-    //     var startIndex = this.data.findIndex(function(data){
-    //         return data.time >= startDelta;
-    //     })
-
-    //     var endIndex = this.data.findLastIndex(function(data){
-    //         return data.time <= endDelta;
-    //     });
-
-    //     return this.data.slice(startIndex,endIndex+1)
-    //         .map(entry => {
-    //             return {count: entry.count, time: new Date(this.startTime.getTime() + entry.time)}
-    //         });
-
-    // }
 
 
     getDataByTimeInterval(startTime,duration) {
@@ -76,7 +57,6 @@ export class Log {
             });
 
     }
-
 
 
     incrementTime(increment) {
@@ -104,7 +84,7 @@ export class Log {
         return new Promise((resolve, reject) => {
 
             // Grab the data that hasn't been uploaded yet and set its upload status to pending
-            let data = this.data;
+            let data = this.syncCache;
             data.forEach(entry => {entry.uploaded = "pending"})
 
             // Build the object that will be sent to the API
@@ -114,7 +94,7 @@ export class Log {
                 'fileName': this.fileName, 
                 'weather': this.weather,
                 'notes': this.notes,
-                'data': data
+                'data': this.syncCache
             }
 
             makeHttpRequest('api/logs','POST',JSON.stringify(body),'application/json')
@@ -125,7 +105,11 @@ export class Log {
 
                 data.forEach(entry => {entry.uploaded = true});
 
+                // Remove successfully uploaded entries from the sync cache
+                this.syncCache = this.syncCache.filter(entry => entry.uploaded != true);
+
                 console.log("log id: "+this.id);
+                console.log(this.syncCache);
                 resolve(res);
             })
             .catch(error => {
@@ -152,7 +136,7 @@ export class Log {
         // Otherwise add the new entries
         else if (this.id && !this.addingToDb) {
             // Get the entries that haven't been uploaded yet
-            let data = this.data.filter(entry => !entry.uploaded)
+            let data = this.syncCache.filter(entry => !entry.uploaded)
 
             if (data.length) {
                 //  Add a pending state to each entry
@@ -168,6 +152,11 @@ export class Log {
                     data.forEach(entry => {
                         entry.uploaded = res.success ? true : false;
                     })
+
+                    // Remove the entries from the sync cache that were uploaded
+                    this.syncCache = this.syncCache.filter(entry => entry.uploaded != true);
+
+                    console.log(this.syncCache);
                     
                 })
                 .catch(error => {
