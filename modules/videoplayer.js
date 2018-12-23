@@ -92,7 +92,8 @@ export class VideoPlayer {
             const count = e.keyCode == 38 ? 1 : -1; 
             this.log.addData(count, this.slider.currentTime);
             this.graph.renderGraph(this.slider.currentTime)
-            // countOut.innerHTML = log.currentCount;
+
+            if (this.onLogChange) this.onLogChange(this.log);
         }
     }
 

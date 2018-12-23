@@ -119,6 +119,12 @@ function handleVideoUpload() {
     let videoURL = URL.createObjectURL(videoFile);
     videoPlayer.loadVideo(videoURL)
 
+    // Update the bird count when the log is changed
+    videoPlayer.onLogChange = () => {
+        let countString = log.currentCount + (log.currentCount == 1 ? " Bird" : " Birds");
+        document.getElementById('count').innerHTML = countString;
+    }
+
     if (fromDB) {
         startTime = log.startTime;
         displayVideoPlayer();
@@ -161,11 +167,35 @@ function handleVideoUpload() {
 
 function displayVideoPlayer(notes,weather) {
 
+    // Switch to dark mode
+    document.body.classList.add('dark');
+
+
+
+    // // 
+
     // Hide the date form
     document.getElementById('assignDate').classList.add('hide');
     
     // Create the log
     if (!fromDB) log = new Log('video', startTime,videoFile.name,undefined,weather,notes);
+
+    // Display the date and bird count text in the header
+    document.getElementById('count').parentElement.classList.remove('hide');
+    document.getElementById('date').parentElement.classList.remove('hide');
+
+    // Display the done link and update it so it points to the correct log page (once the log has been saved to the database)
+    let doneLink = document.getElementById('doneRecording');
+    doneLink.parentElement.classList.remove("hide");
+    if (log.id) {
+        doneLink.href = `log.html?id=${log.id}`;
+    }
+    else {
+        log.onLogAddedToDb = () => {
+            doneLink.href = `log.html?id=${log.id}`;
+        }
+    }
+
 
     // Show the video
     videoPlayer.displayPlayer(log)

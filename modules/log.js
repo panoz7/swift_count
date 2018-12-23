@@ -110,6 +110,9 @@ export class Log {
 
                 console.log("log id: "+this.id);
                 console.log(this.syncCache);
+
+                if (this.onLogAddedToDb) this.onLogAddedToDb(this);
+
                 resolve(res);
             })
             .catch(error => {

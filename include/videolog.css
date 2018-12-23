@@ -1,90 +1,116 @@
+        body.dark {
+            background-color: #222;
+        }
 
-        body {
+        body.dark .header {
             background-color: #111;
+            border-bottom: 1px solid black;
+        }
+
+        body.dark .header h2 a {
             color: white;
-            font-family: arial;
-            margin: 0px;
-            padding: 0px;
+
         }
-    
-        .hide {
-            display: none !important;
-        }
-    
+        
         .modal {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #ccc;
+            margin: 50px auto;
+            background-color: white;
+            width: 500px;
+            border: 1px solid #999;
         }
     
         .modal .content {
             box-sizing: border-box;
-            color: #222;
-            width: 500px;
-            background-color: white;
-            text-align: center;
-        }
-    
-        .modal h2 {
-            background-color: #0b407c;
-            padding: 10px;
-            margin: 0px;
-            font-size: 18px;
-        }
-    
-        #dropbox {
             padding: 30px;
+        }
+
+        #dropbox {
             width: 100%;
             background-color: white;
             color: black;
+            text-align: center;
+            cursor: pointer;
+            padding: 30px;
+            box-sizing: border-box;
         }
     
         #dropbox Object {
             width: 150px;
-            fill: blue;
+            opacity: .85;
+            margin-bottom: 20px;
         }
-    
-        /* #uploadicon svg path {
-            fill: blue;
-        } */
-    
+
+        #dropbox h3 {
+            margin: 0;
+            padding: 0;
+        }
+
+        #dropbox p {
+            margin: 0;
+            padding: 0;
+        }
+
         #dropbox.active {
             background-color: #90c600;
             color: black;
         }
-    
+
+        #dropbox:hover h3 {
+            text-decoration: underline;
+        }
+
+        #dropbox:hover Object{
+            opacity: 1
+        }
+
+        .modal .content h3 {
+            margin: 15px 0 5px 0;
+            padding: 0px;
+        }
+
+        .modal .content h3:first-child {
+            margin-top: 0px;
+        }
+ 
+        .modal .content p {
+            font-size: 14px;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .modal .content textarea {
+            width: 100%;
+            height: 80px;
+        }
+
         #assignDate input[type=number] {
             font-size: 20px;
             padding: 5px;
             text-align: center;
             margin-right: 5px;
             width: 6em;
+            margin: 10px 5px 10px 0;
         }
-            
-            .videoLoading {
-                background-color: #222;
-                width: 100%;
-                height: 562.5px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-    
-            .hide {
-                display: none;
-            }
 
+        .modal .content input[type=submit] {
+            color: black;
+            font-size: 14px;
+            border: 1px solid #999;
+            background-color: #fafafa;
+            margin: 20px 0 0 0;
+            padding: 5px 10px;
+            text-transform: uppercase;
+            /* font-weight: bold; */
+        }
 
-
-    video {
-        width: 1000px;
-    }
 
     #videoPlayer {
         margin: 0px auto;
         width: 1000px;
+    }
+
+    #videoPlayer video {
+        width: 100%;
     }
 
     #graph {
