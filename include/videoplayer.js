@@ -165,7 +165,7 @@ function displayVideoPlayer(notes,weather) {
     document.getElementById('assignDate').classList.add('hide');
     
     // Create the log
-    if (!fromDB) log = new Log('video', startTime,videoFile.name,undefined,notes,weather);
+    if (!fromDB) log = new Log('video', startTime,videoFile.name,undefined,weather,notes);
 
     // Show the video
     videoPlayer.displayPlayer(log)
