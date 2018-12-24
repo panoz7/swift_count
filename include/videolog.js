@@ -32,6 +32,7 @@ function setup() {
 
 async function buildPlayerFromId(id) {
     log = await Log.fromId2(id);
+    console.log(log);
     document.getElementById('clickToUpload').innerHTML = `Click to Upload ${log.fileName}`;
 }
 
@@ -183,6 +184,10 @@ function displayVideoPlayer(notes,weather) {
     // Display the date and bird count text in the header
     document.getElementById('count').parentElement.classList.remove('hide');
     document.getElementById('date').parentElement.classList.remove('hide');
+
+    // Display the correct number of birds
+    let countString = log.currentCount + (log.currentCount == 1 ? " Bird" : " Birds");
+    document.getElementById('count').innerHTML = countString;
 
     // Display the done link and update it so it points to the correct log page (once the log has been saved to the database)
     let doneLink = document.getElementById('doneRecording');

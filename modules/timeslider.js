@@ -131,11 +131,14 @@ export class TimeSlider {
     handlePlayBackSpeedChange() {
         this.playbackSpeed = this.playbackSpeedSelect.value; 
         this.skipDistance = Number(this.playbackSpeedSelect.options[this.playbackSpeedSelect.selectedIndex].dataset.skipdistance);
+        let graphDuration = Number(this.playbackSpeedSelect.options[this.playbackSpeedSelect.selectedIndex].dataset.graphduration)
         
         this.skipAhead.innerHTML = "+" + this.skipDistance;
         this.skipBack.innerHTML = "-" + this.skipDistance;
 
         this.video.playbackRate = this.playbackSpeed;
+
+        if (this.onPlaybackSpeedChange) this.onPlaybackSpeedChange({playbackSpeed: this.playbackSpeed, skipDistance: this.skipDistance, graphDuration: graphDuration})
     }
 
     handleSkip(e) {

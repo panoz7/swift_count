@@ -66,6 +66,12 @@ export class VideoPlayer {
                 this.graph.renderGraph(newTime)
             }
 
+            // When the playback speed changes update the graph so it shows the correct duration
+            this.slider.onPlaybackSpeedChange = ({graphDuration}) => {
+                console.log(graphDuration);
+                this.graph.duration = graphDuration * 1000;
+            }
+
             // Update the date at the top of the player
             document.getElementById('date').innerHTML = `${this.startTime.getMonth() + 1}/${this.startTime.getDate()}/${this.startTime.getFullYear()}`;
 
