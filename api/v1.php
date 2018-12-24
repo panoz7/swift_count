@@ -215,6 +215,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
 }
 
 
+
+// DELETE /logs/{log_id}
+// Create a new log
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+
+    if ($_GET['log_id']) {
+
+        $logDeleteQuery = "DELETE FROM logs WHERE log_id = ".$_GET['log_id'];
+        $entriesDeleteQuery = "DELETE FROM entries WHERE log_id = ".$_GET['log_id'];
+
+        $logResult = $mysqli->query($logDeleteQuery); // OR DIE($mysqli->error);
+        $entriesResult = $mysqli->query($entriesDeleteQuery); // OR DIE($mysqli->error);
+
+        $success = $logResult == 1 && $entriesResult == 1;
+
+        $data = array('success' => $success);
+        header('Content-type: application/json');
+        echo json_encode($data);
+
+
+    }
+
+}
+
+
 function insertLog($data) {
 
     global $mysqli;

@@ -242,6 +242,21 @@ export class Log {
     }
 
 
+    delete() {
+        return new Promise((resolve, reject) => {
+
+            makeHttpRequest(`api/logs/${this.id}`, 'DELETE')
+            .then(res => {
+                res = JSON.parse(res);
+                if (res.success) resolve();
+                else reject();
+            })
+            .catch(e => {
+                reject();
+            })
+
+        })
+    }
 
 
 

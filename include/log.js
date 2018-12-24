@@ -1,28 +1,30 @@
-  import {Log} from '../modules/log.js';
-    import {buildRow, formatPlaybackTime} from '../modules/helper.js';
-    import {EditableField} from '../modules/editablefield.js';
+import {Log} from '../modules/log.js';
+import {buildRow, formatPlaybackTime} from '../modules/helper.js';
+import {EditableField} from '../modules/editablefield.js';
 
-    window.onload = setup;
-    google.charts.load('current', {'packages':['corechart']});
+window.onload = setup;
+google.charts.load('current', {'packages':['corechart']});
 
-    var id;
+var id, log;
 
-    function setup() {
+function setup() {
 
-        const params = new URLSearchParams(location.search);
-        id = params.get('id');
+    const params = new URLSearchParams(location.search);
+    id = params.get('id');
 
-        if (id) {
-            loadLog(id);
-        }
-    
+    if (id) {
+        loadLog(id);
     }
+
+}
 
 
 
 async function loadLog(id) {
     // Load the log
-    let log = await Log.fromId2(id);
+    log = await Log.fromId2(id);
+
+    console.log(log);
 
     const date = `${log.startTime.getMonth()}/${log.startTime.getDate()}/${log.startTime.getFullYear()}`;
     
@@ -67,6 +69,10 @@ async function loadLog(id) {
     let downloadLogLink = document.getElementById('downloadLog');
     downloadLogLink.href = `api/logtospreadsheet.php?id=${id}`;
 
+    // Delete link
+    let deleteLogLink = document.getElementById('deleteLog');
+    deleteLogLink.addEventListener('click', handleDelete)
+
     // Output the raw data
     let rawDataTable = document.getElementById('rawLog');
     log.data.forEach(entry => {
@@ -91,6 +97,19 @@ async function loadLog(id) {
         tbody.appendChild(buildRow([formatPlaybackTime(minute.time), minute.count, minute.runningTotal]))
     })
     
+}
+
+function handleDelete() {
+    let confirm = window.confirm("Are you sure you want to delete this log? This action can not be undone.")
+    if (confirm) {
+        log.delete()
+            .then(() => {
+                window.location.replace('./');
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+    }
 }
 
 
