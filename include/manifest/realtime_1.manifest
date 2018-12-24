@@ -1,6 +1,6 @@
 CACHE MANIFEST
 # This is a comment.
-# Cache manifest version 0.0.20
+# Cache manifest version 0.0.21
 
 CACHE: 
 ../../realtimelog.html
@@ -8,6 +8,7 @@ CACHE:
 ../../modules/log.js
 ../../modules/logcache.js
 ../../include/realtimelog.css
+../../include/realtimelog.js
 ../../images/redoicon.svg
 ../../images/undoicon.svg
 https://fonts.googleapis.com/css?family=Nunito+Sans
