@@ -1,6 +1,6 @@
-  import {Log} from './modules/log.js';
-    import {buildRow, formatPlaybackTime} from './modules/helper.js';
-    import {EditableField} from './modules/editablefield.js';
+  import {Log} from '../modules/log.js';
+    import {buildRow, formatPlaybackTime} from '../modules/helper.js';
+    import {EditableField} from '../modules/editablefield.js';
 
     window.onload = setup;
     google.charts.load('current', {'packages':['corechart']});

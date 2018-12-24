@@ -1,7 +1,7 @@
 
-    import {LogCache} from './modules/logcache.js'
-    import {OfflineLog} from './modules/log.js';
-    import {formatDateForDisplay} from './modules/helper.js';
+    import {LogCache} from '../modules/logcache.js'
+    import {OfflineLog} from '../modules/log.js';
+    import {formatDateForDisplay} from '../modules/helper.js';
 
     // Global variables
     let logCache = new LogCache();
