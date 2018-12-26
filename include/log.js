@@ -1,5 +1,5 @@
 import {Log} from '../modules/log.js';
-import {buildRow, formatPlaybackTime} from '../modules/helper.js';
+import {buildRow, formatPlaybackTime, formatDateForDisplay} from '../modules/helper.js';
 import {EditableField} from '../modules/editablefield.js';
 
 window.onload = setup;
@@ -26,7 +26,7 @@ async function loadLog(id) {
 
     console.log(log);
 
-    const date = `${log.startTime.getMonth()}/${log.startTime.getDate()}/${log.startTime.getFullYear()}`;
+    const date = formatDateForDisplay(log.startTime);
     
     // Update the page Titles
     document.title = `Swift Log ${date}`;
