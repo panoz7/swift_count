@@ -22,11 +22,11 @@ function setup() {
     const fileUpload = document.getElementById('fileUpload');
     fileUpload.addEventListener("change", handleUpload)
 
-    dropbox.addEventListener("dragenter", dragEnter, false);
-    dropbox.addEventListener("dragover", dragOver, false);
-    dropbox.addEventListener("dragleave", dragLeave, false);
-    dropbox.addEventListener("drop", drop, false);
-    dropbox.addEventListener('click', () => {fileUpload.click()})
+    dropBox.addEventListener("dragenter", dragEnter, false);
+    dropBox.addEventListener("dragover", dragOver, false);
+    dropBox.addEventListener("dragleave", dragLeave, false);
+    dropBox.addEventListener("drop", drop, false);
+    dropBox.addEventListener('click', () => {fileUpload.click()})
 }
 
 
@@ -91,10 +91,14 @@ function handleUpload(e) {
     const file = this.files[0];
 
     if (fromDB) {
+        console.log("HERE");
         // Check to makes sure the uploaded file name matches the file name in the log
         if (file.name == log.fileName) {
             videoFile = file;
             handleVideoUpload();
+        }
+        else {
+            alert("The video you selected is not the video you used to create the log. Please select the correct file.");
         }
     }
     else {
