@@ -30,12 +30,21 @@ export class Log {
         let insertIndex = this.data.findIndex(entry => entry.time >= delta)
         if (insertIndex < 0) insertIndex = this.data.length;
 
-        // Insert the entry and add it to the sync cache
-        let entry = {time: delta, count};
-        this.data.splice(insertIndex,0,entry);
-        this.syncCache.push(entry);
+        let nextEntry = this.data[insertIndex];
 
-        this.redoCache = [];
+        // If the entry after the new entry has the same time
+        if (nextEntry && nextEntry.time == delta) {
+            // increment the count of the next entry 
+            nextEntry.count += count;
+            this.syncCache.push({time: delta, count: nextEntry.count});
+        }
+        else {
+            // Insert the entry and add it to the sync cache
+            let entry = {time: delta, count};
+            this.data.splice(insertIndex,0,entry);
+            this.syncCache.push(entry);
+        }
+
 
         this.syncWithDb();
     }

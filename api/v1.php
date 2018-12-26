@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'notes' => $logRow['notes']
         );
 
-        $query = "SELECT * FROM entries WHERE log_id = ".$_GET['log_id']." ORDER BY time";
+        $query = "SELECT * FROM entries_new WHERE log_id = ".$_GET['log_id']." ORDER BY time";
         $result = $mysqli->query($query) OR DIE($mysqli->error);
 
         while ($row = $result->fetch_assoc()) {
@@ -113,16 +113,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($_GET['log_id']) {
         $log_id = $_GET['log_id'];
 
-        $query = "INSERT INTO entries (log_id, time, count) VALUES ";
+        $query = "INSERT INTO entries_new (log_id, time, count) VALUES ";
 
         $inserts = Array();
         foreach ($data as $entry) {
             $inserts[] = "('".$log_id."','".$entry['time']."','".$entry['count']."')";
         }
 
-        $query .= implode(",",$inserts);
+        $query .= implode(",",$inserts)." ";
 
-        
+        $query .= "ON DUPLICATE KEY UPDATE count = VALUES(count)";
+
         $result = $mysqli->query($query) OR DIE($mysqli->error);
         
         $data = array('success' => $result == 1 ? true : false);
@@ -223,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     if ($_GET['log_id']) {
 
         $logDeleteQuery = "DELETE FROM logs WHERE log_id = ".$_GET['log_id'];
-        $entriesDeleteQuery = "DELETE FROM entries WHERE log_id = ".$_GET['log_id'];
+        $entriesDeleteQuery = "DELETE FROM entries_new WHERE log_id = ".$_GET['log_id'];
 
         $logResult = $mysqli->query($logDeleteQuery); // OR DIE($mysqli->error);
         $entriesResult = $mysqli->query($entriesDeleteQuery); // OR DIE($mysqli->error);
@@ -266,7 +267,7 @@ function insertLog($data) {
         
         // If there's data insert it into the entries table
         if ($data['data']) {
-            $query = "INSERT INTO entries (log_id, time, count) VALUES ";
+            $query = "INSERT INTO entries_new (log_id, time, count) VALUES ";
 
             $inserts = Array();
             foreach ($data['data'] as $entry) {
