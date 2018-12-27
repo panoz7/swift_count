@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Dec 15, 2018 at 09:09 PM
+-- Generation Time: Dec 27, 2018 at 12:02 AM
 -- Server version: 5.7.23
 -- PHP Version: 7.2.10
 
@@ -20,12 +20,10 @@ SET time_zone = "+00:00";
 -- Table structure for table `entries`
 --
 
-DROP TABLE IF EXISTS `entries`;
 CREATE TABLE `entries` (
-  `entry_id` int(11) NOT NULL,
-  `log_id` int(9) NOT NULL,
-  `count` int(2) NOT NULL,
-  `time` int(11) NOT NULL
+  `log_id` int(8) NOT NULL,
+  `count` int(4) NOT NULL,
+  `time` int(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -34,7 +32,6 @@ CREATE TABLE `entries` (
 -- Table structure for table `logs`
 --
 
-DROP TABLE IF EXISTS `logs`;
 CREATE TABLE `logs` (
   `log_id` int(11) NOT NULL,
   `logType` int(3) NOT NULL,
@@ -50,7 +47,6 @@ CREATE TABLE `logs` (
 -- Table structure for table `logtypes`
 --
 
-DROP TABLE IF EXISTS `logtypes`;
 CREATE TABLE `logtypes` (
   `logtype_id` int(11) NOT NULL,
   `logtype_name` varchar(100) NOT NULL
@@ -72,7 +68,7 @@ INSERT INTO `logtypes` (`logtype_id`, `logtype_name`) VALUES
 -- Indexes for table `entries`
 --
 ALTER TABLE `entries`
-  ADD PRIMARY KEY (`entry_id`);
+  ADD PRIMARY KEY (`log_id`,`time`) USING BTREE;
 
 --
 -- Indexes for table `logs`
@@ -89,12 +85,6 @@ ALTER TABLE `logtypes`
 --
 -- AUTO_INCREMENT for dumped tables
 --
-
---
--- AUTO_INCREMENT for table `entries`
---
-ALTER TABLE `entries`
-  MODIFY `entry_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `logs`
