@@ -47,6 +47,9 @@ export class VideoPlayer {
             this.div.getElementsByClassName('videoLoading')[0].classList.add('hide');
             this.video.classList.remove('hide');
 
+            // Mute the video
+            this.video.muted = true;
+
             // Set up the graph and render the first frame
             this.graph = new Graph(document.getElementById('graph'),this.log,this.startTime,30000);
             this.graph.renderGraph(this.startTime);
