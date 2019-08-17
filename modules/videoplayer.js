@@ -1,6 +1,7 @@
 import {TimeSlider} from './timeslider.js';
 import {Log} from './log.js';
 import {Graph} from './loggraph.js';
+import {beep} from './beep.js';
 
 export class VideoPlayer {
 
@@ -98,6 +99,8 @@ export class VideoPlayer {
             const count = e.keyCode == 38 ? 1 : -1; 
             this.log.addData(count, this.slider.currentTime);
             this.graph.renderGraph(this.slider.currentTime)
+
+            beep();
 
             if (this.onLogChange) this.onLogChange(this.log);
         }
